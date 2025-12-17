@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+/* The Vent Men Brand Tokens */
+:root {
+  /* Primary Colors */
+  --orange: #E8612C;
+  --navy: #1E2A4A;
+  --cream: #F0EBE3;
+
+  /* Secondary Colors */
+  --white: #FFFFFF;
+  --charcoal: #3D3D3D;
+
+  /* Semantic Mappings */
+  --background: var(--cream);
+  --background-alt: var(--white);
+  --foreground: var(--navy);
+  --foreground-muted: var(--charcoal);
+  --accent: var(--orange);
+
+  /* Component Tokens */
+  --card-background: var(--white);
+  --card-border: rgba(30, 42, 74, 0.1);
+  --button-primary-bg: var(--orange);
+  --button-primary-text: var(--white);
+  --button-primary-hover: #D55525;
+  --input-border: rgba(30, 42, 74, 0.2);
+  --input-focus: var(--orange);
+}
+
+@theme inline {
+  /* Colors */
+  --color-orange: var(--orange);
+  --color-navy: var(--navy);
+  --color-cream: var(--cream);
+  --color-charcoal: var(--charcoal);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Fonts */
+  --font-sans: var(--font-source-sans);
+  --font-display: var(--font-oswald);
+}
+
+/* Base Styles */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-source-sans), 'Source Sans Pro', Arial, sans-serif;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-oswald), 'Oswald', Impact, sans-serif;
+  font-weight: 700;
+  color: var(--navy);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* Utility Classes */
+.text-orange { color: var(--orange); }
+.text-navy { color: var(--navy); }
+.text-cream { color: var(--cream); }
+.text-charcoal { color: var(--charcoal); }
+
+.bg-orange { background-color: var(--orange); }
+.bg-navy { background-color: var(--navy); }
+.bg-cream { background-color: var(--cream); }
+
+/* Button Base */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-oswald), 'Oswald', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--orange);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background-color: var(--button-primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: var(--navy);
+  color: var(--white);
+}
+
+.btn-secondary:hover {
+  background-color: #2a3a5a;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 2px solid var(--navy);
+  color: var(--navy);
+}
+
+.btn-outline:hover {
+  background-color: var(--navy);
+  color: var(--white);
+}
+
+/* Card Component */
+.card {
+  background-color: var(--card-background);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+}
+
+/* Focus States */
+*:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--orange);
+  color: var(--white);
+}
