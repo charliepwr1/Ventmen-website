@@ -39,10 +39,8 @@ export default function Step2Package({
           const isFullService = key === "fullservice";
 
           return (
-            <button
+            <div
               key={key}
-              type="button"
-              onClick={() => updateData({ package: key })}
               className={`text-left transition-all border-2 bg-white relative ${
                 isSelected
                   ? "border-orange shadow-lg scale-[1.02]"
@@ -56,89 +54,96 @@ export default function Step2Package({
                 </div>
               )}
 
-              {/* Header */}
-              <div
-                className={`p-4 text-center ${
-                  isFullService
-                    ? "bg-orange text-white"
-                    : isPro
-                      ? "bg-navy text-white"
-                      : "bg-gray-100 text-navy"
-                }`}
+              {/* Clickable Card Area */}
+              <button
+                type="button"
+                onClick={() => updateData({ package: key })}
+                className="w-full text-left"
               >
-                <h3 className="font-display text-xl font-bold uppercase">
-                  {pkg.name}
-                </h3>
-                <p
-                  className={`text-sm ${
-                    isFullService || isPro ? "text-white/80" : "text-charcoal/60"
+                {/* Header */}
+                <div
+                  className={`p-4 text-center ${
+                    isFullService
+                      ? "bg-orange text-white"
+                      : isPro
+                        ? "bg-navy text-white"
+                        : "bg-gray-100 text-navy"
                   }`}
                 >
-                  {pkg.tagline}
-                </p>
-              </div>
-
-              {/* Price */}
-              <div className="p-4 text-center border-b border-gray-100">
-                <span className="text-orange font-display text-4xl font-bold">
-                  ${pkg.price.toFixed(2).split(".")[0]}
-                </span>
-                <span className="text-orange font-display text-xl">
-                  .{pkg.price.toFixed(2).split(".")[1]}
-                </span>
-                <span className="text-charcoal/50 text-sm ml-1">+ GST</span>
-              </div>
-
-              {/* Features List */}
-              <div className="p-4 space-y-2 text-sm">
-                <div className="flex items-start gap-2 text-charcoal/70">
-                  <span className="text-orange mt-0.5">⊕</span>
-                  <span>
-                    {INCLUDED_VENTS} vents included, then ${pkg.perVent}/vent
-                  </span>
+                  <h3 className="font-display text-xl font-bold uppercase">
+                    {pkg.name}
+                  </h3>
+                  <p
+                    className={`text-sm ${
+                      isFullService || isPro ? "text-white/80" : "text-charcoal/60"
+                    }`}
+                  >
+                    {pkg.tagline}
+                  </p>
                 </div>
 
-                <div className="flex items-start gap-2 text-charcoal/70">
-                  <span className="text-orange mt-0.5">⟳</span>
-                  <span>
-                    High-efficiency or A/C Bypass: ${addons.bypass.price}
+                {/* Price */}
+                <div className="p-4 text-center border-b border-gray-100">
+                  <span className="text-orange font-display text-4xl font-bold">
+                    ${pkg.price.toFixed(2).split(".")[0]}
                   </span>
+                  <span className="text-orange font-display text-xl">
+                    .{pkg.price.toFixed(2).split(".")[1]}
+                  </span>
+                  <span className="text-charcoal/50 text-sm ml-1">+ GST</span>
                 </div>
 
-                {pkg.features.slice(1).map((feature, idx) => {
-                  const isHighlighted =
-                    (key === "pro" &&
-                      feature.toLowerCase().includes("rotary brush")) ||
-                    (key === "fullservice" &&
-                      (feature.toLowerCase().includes("octopus") ||
-                        feature.toLowerCase().includes("fresh air") ||
-                        feature.toLowerCase().includes("dryer") ||
-                        feature.toLowerCase().includes("total care")));
+                {/* Features List */}
+                <div className="p-4 space-y-2 text-sm">
+                  <div className="flex items-start gap-2 text-charcoal/70">
+                    <span className="text-orange mt-0.5">⊕</span>
+                    <span>
+                      {INCLUDED_VENTS} vents included, then ${pkg.perVent}/vent
+                    </span>
+                  </div>
 
-                  return (
-                    <div key={idx} className="flex items-start gap-2">
-                      <span
-                        className={`mt-0.5 ${
-                          isHighlighted ? "text-orange" : "text-charcoal/40"
-                        }`}
-                      >
-                        ✓
-                      </span>
-                      <span
-                        className={
-                          isHighlighted
-                            ? "text-navy font-medium"
-                            : "text-charcoal/70"
-                        }
-                      >
-                        {feature}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
+                  <div className="flex items-start gap-2 text-charcoal/70">
+                    <span className="text-orange mt-0.5">⟳</span>
+                    <span>
+                      High-efficiency or A/C Bypass: ${addons.bypass.price}
+                    </span>
+                  </div>
 
-              {/* Learn More */}
+                  {pkg.features.slice(1).map((feature, idx) => {
+                    const isHighlighted =
+                      (key === "pro" &&
+                        feature.toLowerCase().includes("rotary brush")) ||
+                      (key === "fullservice" &&
+                        (feature.toLowerCase().includes("octopus") ||
+                          feature.toLowerCase().includes("fresh air") ||
+                          feature.toLowerCase().includes("dryer") ||
+                          feature.toLowerCase().includes("total care")));
+
+                    return (
+                      <div key={idx} className="flex items-start gap-2">
+                        <span
+                          className={`mt-0.5 ${
+                            isHighlighted ? "text-orange" : "text-charcoal/40"
+                          }`}
+                        >
+                          ✓
+                        </span>
+                        <span
+                          className={
+                            isHighlighted
+                              ? "text-navy font-medium"
+                              : "text-charcoal/70"
+                          }
+                        >
+                          {feature}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </button>
+
+              {/* Learn More - Outside the button */}
               <ExpandableSection title="Learn more">
                 <p>
                   {key === "basic" &&
@@ -156,7 +161,7 @@ export default function Step2Package({
                   Selected
                 </div>
               )}
-            </button>
+            </div>
           );
         })}
       </div>

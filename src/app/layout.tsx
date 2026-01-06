@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Oswald, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 const oswald = Oswald({
   variable: "--font-oswald",
@@ -15,7 +17,10 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "The Vent Men | Video-Verified Duct Cleaning in Calgary",
+  title: {
+    default: "The Vent Men | Video-Verified Duct Cleaning in Calgary",
+    template: "%s | The Vent Men",
+  },
   description:
     "Calgary's trusted furnace and duct cleaning service. We show up on time, document everything on video, and prove your system is clean. Get your instant quote today.",
   keywords: [
@@ -27,6 +32,7 @@ export const metadata: Metadata = {
     "Calgary duct cleaners",
   ],
   authors: [{ name: "The Vent Men" }],
+  metadataBase: new URL("https://theventmen.ca"),
   openGraph: {
     title: "The Vent Men | Video-Verified Duct Cleaning",
     description:
@@ -46,7 +52,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${oswald.variable} ${sourceSans.variable} antialiased`}>
-        {children}
+        <Header />
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
