@@ -3,6 +3,8 @@ import { Oswald, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { JsonLd } from '@/components/seo/JsonLd';
+import { BUSINESS, SERVICE_AREAS, SERVICES, FOUNDERS } from '@/lib/constants/schema';
 
 const oswald = Oswald({
   variable: "--font-oswald",
@@ -49,9 +51,72 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'HVACBusiness',
+    '@id': `${BUSINESS.url}/#organization`,
+    name: BUSINESS.name,
+    legalName: BUSINESS.legalName,
+    url: BUSINESS.url,
+    logo: BUSINESS.logo,
+    image: BUSINESS.logo,
+    description: BUSINESS.description,
+    slogan: BUSINESS.slogan,
+    foundingDate: BUSINESS.foundingDate,
+    telephone: BUSINESS.telephone,
+    email: BUSINESS.email,
+    priceRange: BUSINESS.priceRange,
+    currenciesAccepted: BUSINESS.currenciesAccepted,
+    paymentAccepted: BUSINESS.paymentAccepted,
+    address: {
+      '@type': 'PostalAddress',
+      ...BUSINESS.address,
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: BUSINESS.geo.latitude,
+      longitude: BUSINESS.geo.longitude,
+    },
+    openingHoursSpecification: {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      opens: '08:00',
+      closes: '18:00',
+    },
+    areaServed: SERVICE_AREAS.map((area) => ({
+      '@type': area.type,
+      name: area.name,
+      ...(area.sameAs ? { sameAs: area.sameAs } : {}),
+    })),
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'HVAC Cleaning Services',
+      itemListElement: SERVICES.map((svc) => ({
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: svc.name,
+          description: svc.shortDescription,
+          provider: { '@id': `${BUSINESS.url}/#organization` },
+          areaServed: SERVICE_AREAS.map((area) => ({
+            '@type': area.type,
+            name: area.name,
+          })),
+        },
+      })),
+    },
+    founder: FOUNDERS.map((f) => ({
+      '@type': 'Person',
+      name: f.name,
+      jobTitle: f.role,
+    })),
+    ...(BUSINESS.sameAs.length > 0 ? { sameAs: BUSINESS.sameAs } : {}),
+  };
+
   return (
     <html lang="en">
       <body className={`${oswald.variable} ${sourceSans.variable} antialiased`}>
+        <JsonLd data={organizationSchema} />
         <Header />
         <main>{children}</main>
         <Footer />
