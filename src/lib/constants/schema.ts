@@ -164,3 +164,52 @@ export const FOUNDERS = [
     description: 'Multi-business operator with expertise in operations, logistics, and customer experience.',
   },
 ] as const;
+
+/**
+ * AggregateRating schema -- add to root layout once 10+ Google reviews exist.
+ * DO NOT add with fake data. AI systems cross-reference with Google Business Profile.
+ *
+ * Usage (when ready):
+ *   aggregateRating: buildAggregateRating(4.9, 47),
+ */
+export function buildAggregateRating(ratingValue: number, reviewCount: number) {
+  return {
+    '@type': 'AggregateRating' as const,
+    ratingValue,
+    reviewCount,
+    bestRating: 5,
+    worstRating: 1,
+  };
+}
+
+/**
+ * VideoObject schema -- add to service pages once before/after videos are hosted.
+ * Embed on the /work page and individual service pages.
+ *
+ * Usage:
+ *   <JsonLd data={buildVideoSchema({ name: '...', description: '...', ... })} />
+ */
+export function buildVideoSchema(video: {
+  name: string;
+  description: string;
+  thumbnailUrl: string;
+  contentUrl: string;
+  uploadDate: string; // ISO 8601 format
+  duration?: string; // ISO 8601 duration, e.g. 'PT2M30S'
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: video.name,
+    description: video.description,
+    thumbnailUrl: video.thumbnailUrl,
+    contentUrl: video.contentUrl,
+    uploadDate: video.uploadDate,
+    ...(video.duration ? { duration: video.duration } : {}),
+    publisher: {
+      '@type': 'Organization',
+      '@id': `${BUSINESS.url}/#organization`,
+      name: BUSINESS.name,
+    },
+  };
+}
