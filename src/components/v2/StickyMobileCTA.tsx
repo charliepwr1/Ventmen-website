@@ -5,17 +5,14 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export function StickyMobileCTA() {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    if (prefersReducedMotion) {
-      setVisible(true);
-      return;
-    }
+    if (visible) return;
 
     const handleScroll = () => {
       const punchline = document.getElementById("hero-punchline");
@@ -26,7 +23,7 @@ export function StickyMobileCTA() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [visible]);
 
   return (
     <div
