@@ -24,7 +24,7 @@ export function BeforeAfterSlider() {
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
       isDragging.current = true;
-      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+      containerRef.current?.setPointerCapture(e.pointerId);
       updatePosition(e.clientX);
     },
     [updatePosition]
@@ -71,7 +71,7 @@ export function BeforeAfterSlider() {
         {/* Slider */}
         <div
           ref={containerRef}
-          className={`relative h-[200px] cursor-col-resize select-none overflow-hidden border-2 border-[var(--orange)] transition-all duration-600 ease-out md:h-[300px] ${
+          className={`relative h-[200px] cursor-col-resize select-none overflow-hidden border-2 border-[var(--orange)] transition-all duration-600 ease-out focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--cream)] md:h-[300px] ${
             isVisible ? "scale-100 opacity-100" : "scale-95 opacity-0"
           }`}
           onPointerDown={handlePointerDown}

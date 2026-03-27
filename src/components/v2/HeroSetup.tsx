@@ -27,13 +27,13 @@ export function HeroSetup() {
 
       {/* Scroll prompt */}
       <div
-        className="absolute bottom-6 flex flex-col items-center animate-pulse"
+        className="absolute bottom-6 flex flex-col items-center animate-pulse motion-reduce:animate-none"
         style={{ fontFamily: "'Courier New', Courier, monospace" }}
       >
         <span className="text-[0.75rem] uppercase tracking-[0.2em] text-[var(--orange)]">
           Scroll
         </span>
-        <span className="mt-1 animate-bounce text-xl text-[var(--orange)]">
+        <span className="mt-1 animate-bounce motion-reduce:animate-none text-xl text-[var(--orange)]">
           &#8595;
         </span>
       </div>
