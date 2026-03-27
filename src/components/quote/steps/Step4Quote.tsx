@@ -1,7 +1,7 @@
 import type { QuoteData, PackageType } from "@/types";
 import { PACKAGES, ADDONS } from "@/lib/constants";
 import {
-  calculateBothPackagePrices,
+  calculatePriceForPackage,
   calculateDecoySavings,
   formatPrice,
 } from "@/lib/utils/pricing";
@@ -19,17 +19,40 @@ export default function Step4Quote({
   onNext,
   onBack,
 }: Step4QuoteProps) {
-  const prices = calculateBothPackagePrices(data);
+  // Card display prices: computed with FIXED data so they never shift
+  // when toggling packages or optional extras
+  const noAddons: Partial<QuoteData> = {
+    wantsHRV: false,
+    wantsSanitizing: false,
+    wantsDryerVent: false,
+    wantsHumidifier: false,
+    wantsCentralVac: false,
+  };
+
+  // Standard card: base price only (package + extra vents + AC + furnaces)
+  const standardCardPrice = calculatePriceForPackage(
+    { ...data, ...noAddons },
+    "standard"
+  );
+
+  // Deep Clean card: base price + its included freebies (HRV, sanitizing, dryer ground)
+  // The pricing engine handles inclusions internally -- HRV/sanitizing/ground dryer
+  // are free for deepclean, but 2nd floor/rooftop dryer pays the upgrade difference
+  const deepCleanCardPrice = calculatePriceForPackage(
+    {
+      ...data,
+      ...noAddons,
+      wantsHRV: data.hasHRV,
+      wantsSanitizing: true,
+      wantsDryerVent: data.dryerVentLocation !== "none",
+    },
+    "deepclean"
+  );
+
   const decoy = calculateDecoySavings(data);
-  // Spec: suppress strikethrough when customer has neither HRV nor dryer vent,
-  // OR when includedExtrasValue < $50. Show quality message instead.
-  const hasDecoyRelevantExtras = data.hasHRV || data.dryerVentLocation !== "none";
-  const showDecoyStrikethrough =
-    decoy.includedExtrasValue >= 50 && hasDecoyRelevantExtras;
 
   const handlePackageSelect = (pkg: PackageType) => {
     if (pkg === "deepclean") {
-      // Auto-set included items (only if customer has the equipment)
       updateData({
         package: pkg,
         wantsHRV: data.hasHRV,
@@ -37,7 +60,6 @@ export default function Step4Quote({
         wantsDryerVent: data.dryerVentLocation !== "none",
       });
     } else {
-      // Revert to Step 3 pre-seeded values
       updateData({
         package: pkg,
         wantsHRV: data.hasHRV,
@@ -49,7 +71,8 @@ export default function Step4Quote({
 
   const isDeepClean = data.package === "deepclean";
 
-  // Build list of Deep Clean included extras relevant to this customer
+  // Build list of extras included in Deep Clean (shown on Deep Clean card as value items,
+  // shown on Standard card as "not included")
   const includedExtras: { label: string; value: number }[] = [];
   if (data.hasHRV) {
     includedExtras.push({ label: "HRV/ERV cleaning", value: ADDONS.hrv.price });
@@ -74,8 +97,6 @@ export default function Step4Quote({
     });
   }
 
-  // Optional extras: sanitizing always shown (toggleable for Standard, "Included" for Deep Clean)
-  // Plus humidifier/centralVac if customer has that equipment
   const showHumidifier = data.hasHumidifier;
   const showCentralVac = data.hasCentralVac;
 
@@ -115,7 +136,7 @@ export default function Step4Quote({
               {PACKAGES.deepclean.name}
             </h3>
             <div className="text-3xl font-extrabold text-orange mt-1">
-              ${formatPrice(prices.deepClean)}
+              ${formatPrice(deepCleanCardPrice)}
             </div>
             <div className="text-xs opacity-50">+ GST</div>
           </div>
@@ -178,7 +199,7 @@ export default function Step4Quote({
               {PACKAGES.standard.name}
             </h3>
             <div className="text-3xl font-extrabold text-navy mt-1">
-              ${formatPrice(prices.standard)}
+              ${formatPrice(standardCardPrice)}
             </div>
             <div className="text-xs text-charcoal/50">+ GST</div>
           </div>
@@ -200,20 +221,16 @@ export default function Step4Quote({
               </div>
             </div>
 
-            {/* Decoy line */}
-            {showDecoyStrikethrough ? (
-              <div className="mt-3 p-2 bg-gray-50 rounded-md text-xs text-charcoal/60 text-center">
-                Add {decoy.decoyLabel} ={" "}
-                <span className="line-through">
-                  ${formatPrice(decoy.standardWithAddons)}
-                </span>
-              </div>
-            ) : (
-              <div className="mt-3 p-2 bg-gray-50 rounded-md text-xs text-charcoal/60 text-center">
-                The Deep Clean adds double-pass cleaning with octopus whip +
-                Benefect sanitization
-              </div>
-            )}
+            {/* Not included -- show what extras would cost to add */}
+            <div className="mt-3 p-2 bg-gray-50 rounded-md text-xs text-charcoal/50">
+              <div className="font-semibold text-charcoal/60 mb-1">Not included:</div>
+              {includedExtras.map((extra) => (
+                <div key={extra.label} className="flex justify-between">
+                  <span>{extra.label}</span>
+                  <span className="text-charcoal/60">+${formatPrice(extra.value)}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Selected indicator */}
