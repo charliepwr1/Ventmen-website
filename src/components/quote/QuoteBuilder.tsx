@@ -157,8 +157,8 @@ export default function QuoteBuilder({
         </div>
       </div>
 
-      {/* Trust Badges (Steps 1-3 only, before price reveal) */}
-      {step < 4 && (
+      {/* Trust Badges (Step 1 only -- saves space on mobile for later steps) */}
+      {step === 1 && (
         <div className="py-4 px-6 bg-white border-b border-cream-dark">
           <TrustBadges className="max-w-5xl mx-auto" />
         </div>
