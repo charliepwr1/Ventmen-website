@@ -1,5 +1,6 @@
+import { useState } from "react";
 import type { QuoteData, PackageType } from "@/types";
-import { PACKAGES, ADDONS } from "@/lib/constants";
+import { PACKAGES, ADDONS, INCLUDED_VENTS } from "@/lib/constants";
 import {
   calculatePriceForPackage,
   calculateDecoySavings,
@@ -65,6 +66,54 @@ export default function Step4Quote({
   };
 
   const isDeepClean = data.package === "deepclean";
+  const [showBreakdown, setShowBreakdown] = useState(false);
+
+  // Build line-item breakdown for whichever package is selected
+  const selectedPrice = isDeepClean ? deepCleanCardPrice : standardCardPrice;
+  const pkg = isDeepClean ? PACKAGES.deepclean : PACKAGES.standard;
+  const breakdownLines: { label: string; amount: number; included?: boolean }[] = [];
+
+  breakdownLines.push({ label: `${pkg.name} base (${INCLUDED_VENTS} vents)`, amount: pkg.price });
+
+  if (data.vents > INCLUDED_VENTS) {
+    const extraVents = data.vents - INCLUDED_VENTS;
+    breakdownLines.push({
+      label: `${extraVents} extra vent${extraVents > 1 ? "s" : ""} x $${formatPrice(pkg.perVent)}`,
+      amount: extraVents * pkg.perVent,
+    });
+  }
+
+  if (data.hasAC) {
+    breakdownLines.push({ label: ADDONS.acSurcharge.label, amount: ADDONS.acSurcharge.price });
+  }
+
+  if (data.furnaces > 1) {
+    breakdownLines.push({
+      label: `${data.furnaces - 1} additional furnace${data.furnaces > 2 ? "s" : ""}`,
+      amount: (data.furnaces - 1) * ADDONS.secondFurnace.price,
+    });
+  }
+
+  if (isDeepClean) {
+    // Show included extras as $0 lines
+    if (data.hasHRV) {
+      breakdownLines.push({ label: "HRV/ERV cleaning", amount: 0, included: true });
+    }
+    breakdownLines.push({ label: "Benefect sanitization", amount: 0, included: true });
+    if (data.dryerVentLocation === "ground") {
+      breakdownLines.push({ label: "Dryer vent (main floor)", amount: 0, included: true });
+    } else if (data.dryerVentLocation === "second-floor") {
+      breakdownLines.push({
+        label: "Dryer vent (2nd floor upgrade)",
+        amount: ADDONS.dryerSecondFloor.price - ADDONS.dryerGround.price,
+      });
+    } else if (data.dryerVentLocation === "rooftop") {
+      breakdownLines.push({
+        label: "Dryer vent (rooftop upgrade)",
+        amount: ADDONS.dryerRooftop.price - ADDONS.dryerGround.price,
+      });
+    }
+  }
 
   // Build list of extras included in Deep Clean
   const includedExtras: { label: string; value: number }[] = [];
@@ -216,6 +265,44 @@ export default function Step4Quote({
             </div>
           </>
         )}
+
+        {/* Price Breakdown Toggle */}
+        <div className="border-t border-cream-dark">
+          <button
+            type="button"
+            onClick={() => setShowBreakdown(!showBreakdown)}
+            className="w-full px-4 py-2.5 text-xs text-charcoal/60 hover:text-navy flex items-center justify-center gap-1.5 transition-colors"
+          >
+            <span>{showBreakdown ? "Hide" : "See"} price breakdown</span>
+            <svg
+              className={`w-3 h-3 transition-transform ${showBreakdown ? "rotate-180" : ""}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {showBreakdown && (
+            <div className="px-4 pb-4 space-y-1.5 text-xs">
+              {breakdownLines.map((line) => (
+                <div key={line.label} className="flex justify-between">
+                  <span className="text-charcoal/60">{line.label}</span>
+                  {line.included ? (
+                    <span className="text-orange font-semibold">Included</span>
+                  ) : (
+                    <span className="text-charcoal/70 font-medium">${formatPrice(line.amount)}</span>
+                  )}
+                </div>
+              ))}
+              <div className="flex justify-between pt-1.5 border-t border-cream-dark font-bold text-sm">
+                <span className="text-navy">Total</span>
+                <span className="text-navy">${formatPrice(selectedPrice)}</span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Optional Extras */}
