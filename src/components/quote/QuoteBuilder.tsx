@@ -134,26 +134,14 @@ export default function QuoteBuilder({
 
   return (
     <div className="min-h-[60vh] flex flex-col">
-      {/* Quote Header with Progress and Price */}
+      {/* Quote Header with Progress */}
       <div className="py-4 px-6 border-b border-cream-dark bg-cream sticky top-0 z-40">
-        <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex-1">
-            <ProgressBar
-              currentStep={step}
-              totalSteps={5}
-              stepLabels={STEP_LABELS}
-            />
-          </div>
-          {step >= 4 && (
-            <div className="text-right shrink-0">
-              <span className="text-xs text-charcoal/60 uppercase tracking-wide">
-                Your estimate
-              </span>
-              <span className="block font-display text-2xl font-bold text-orange">
-                ${formattedPrice}
-              </span>
-            </div>
-          )}
+        <div className="max-w-5xl mx-auto">
+          <ProgressBar
+            currentStep={step}
+            totalSteps={5}
+            stepLabels={STEP_LABELS}
+          />
         </div>
       </div>
 
