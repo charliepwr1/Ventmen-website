@@ -1,52 +1,59 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Quote Builder", () => {
-  test("loads the first step", async ({ page }) => {
+  test("loads Step 1 with house type options", async ({ page }) => {
     await page.goto("/quote");
-    // Step 1 should be visible
-    const heading = page.locator("h1, h2").first();
-    await expect(heading).toBeVisible();
+    await expect(page.getByText("What type of home")).toBeVisible();
+    await expect(page.getByText(/Detached/i)).toBeVisible();
+    await expect(page.getByText(/Townhome/i)).toBeVisible();
+    await expect(page.getByText(/Apartment/i)).toBeVisible();
   });
 
-  test("displays house type options", async ({ page }) => {
+  test("auto-advances to Step 2 on house type selection", async ({ page }) => {
     await page.goto("/quote");
-    // Should see house type options (Apartment, Townhome, Detached)
-    await expect(page.getByText(/apartment/i).first()).toBeVisible();
-    await expect(page.getByText(/townhome/i).first()).toBeVisible();
-    await expect(page.getByText(/detached/i).first()).toBeVisible();
+    await page.getByText(/Detached House/i).click();
+    // Should auto-advance to Step 2
+    await expect(page.getByText("Tell us about your home")).toBeVisible();
   });
 
-  test("can navigate to step 2", async ({ page }) => {
+  test("can navigate through all 5 steps", async ({ page }) => {
     await page.goto("/quote");
-    // Click the Continue button (exact match to avoid Next.js Dev Tools button)
+
+    // Step 1: Select house type (auto-advance)
+    await page.getByText(/Detached House/i).click();
+
+    // Step 2: Home details
+    await expect(page.getByText("Tell us about your home")).toBeVisible();
     await page.getByRole("button", { name: "Continue", exact: true }).click();
-    // Step 2 should show package options
-    await expect(page.getByText(/basic/i).first()).toBeVisible();
-    await expect(page.getByText(/pro/i).first()).toBeVisible();
-  });
 
-  test("shows pricing information", async ({ page }) => {
-    await page.goto("/quote");
-    // Navigate to step 2 where pricing is shown
+    // Step 3: Home features
+    await expect(page.getByText("What else does your home have")).toBeVisible();
     await page.getByRole("button", { name: "Continue", exact: true }).click();
-    // Should display dollar amounts
+
+    // Step 4: Package selection
+    await expect(page.getByText("Here's what we recommend")).toBeVisible();
+    await expect(page.getByText(/Deep Clean/i).first()).toBeVisible();
     await expect(page.getByText(/\$\d+/).first()).toBeVisible();
+    await page
+      .getByRole("button", { name: "Continue to Booking", exact: true })
+      .click();
+
+    // Step 5: Contact form
+    await expect(page.getByText("Almost there")).toBeVisible();
+    await expect(
+      page.locator('input[type="text"], input[type="email"], input[type="tel"]').first()
+    ).toBeVisible();
   });
 
-  test("can navigate through all 4 steps", async ({ page }) => {
+  test("shows pricing on Step 4", async ({ page }) => {
     await page.goto("/quote");
-
-    // Step 1 → Step 2
+    await page.getByText(/Detached House/i).click();
     await page.getByRole("button", { name: "Continue", exact: true }).click();
-    await expect(page.getByText(/basic/i).first()).toBeVisible();
-
-    // Step 2 → Step 3
     await page.getByRole("button", { name: "Continue", exact: true }).click();
 
-    // Step 3 → Step 4
-    await page.getByRole("button", { name: "Continue", exact: true }).click();
-
-    // Step 4 should show contact form fields
-    await expect(page.locator('input[type="text"], input[type="email"], input[type="tel"]').first()).toBeVisible();
+    // Step 4 should show package prices
+    await expect(page.getByText(/\$\d+\.\d{2}/).first()).toBeVisible();
+    // Trust signals should appear
+    await expect(page.getByText(/Video documentation/i)).toBeVisible();
   });
 });
