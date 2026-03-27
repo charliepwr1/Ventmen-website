@@ -3,70 +3,55 @@ import type { PackagesConfig, AddonsConfig, TimeframeOption, HouseType } from "@
 export const INCLUDED_VENTS = 10;
 
 export const PACKAGES: PackagesConfig = {
-  basic: {
-    name: "Basic",
-    price: 159.95,
-    perVent: 9.95,
-    tagline: "Routine Maintenance",
+  standard: {
+    name: "The Standard",
+    price: 199,
+    perVent: 11.95,
+    tagline: "Professional Duct Cleaning",
     features: [
       "10 vents included",
       "Replace furnace filter",
       "Remove & clean blower motor",
-      "High-pressure air cleaning",
+      "Air gun on all supply vents",
+      "Back skipper in trunk lines",
+      "Truck-mounted HyperVac H2 vacuum",
+      "No HE surcharge",
     ],
     recommended: false,
   },
-  pro: {
-    name: "Pro",
-    price: 219.95,
+  deepclean: {
+    name: "The Deep Clean",
+    price: 299,
     perVent: 13.95,
-    tagline: "Pets, Allergies & Renovations",
+    tagline: "The Full Treatment",
     features: [
-      "10 vents included",
-      "Replace furnace filter",
-      "Remove & clean blower motor",
-      "High-pressure air cleaning",
-      "High-speed rotary brush cleaning",
+      "Everything in The Standard, plus:",
+      "Second pass with forward skip tool on every vent",
+      "Octopus whip in all trunk lines",
+      "HRV / ERV cleaning included",
+      "Benefect duct sanitization included",
+      "Main floor dryer vent cleaning included",
     ],
     recommended: true,
-  },
-  fullservice: {
-    name: "Full Service",
-    price: 349.95,
-    perVent: 14.95,
-    tagline: "Complete Care Package",
-    features: [
-      "10 vents included",
-      "Replace furnace filter",
-      "Remove & clean blower motor",
-      "High-pressure air cleaning",
-      "High-speed rotary brush cleaning",
-      "Reverse octopus whip cleaning",
-      "Fresh air intake cleaning",
-      "Ground floor dryer vent cleaning",
-      "2-year Total Care Plan",
-    ],
-    recommended: false,
   },
 };
 
 export const ADDONS: AddonsConfig = {
-  bypass: { price: 49.95, label: "High-Efficiency / A/C Bypass" },
-  secondFurnace: { price: 79.95, label: "Second Furnace" },
-  secondFurnaceHE: { price: 119.95, label: "Second Furnace (Full Service)" },
-  dryerGround: { price: 59.95, label: "Dryer Vent (Ground Level)" },
-  dryerSecondFloor: { price: 129.95, label: "Dryer Vent (2nd Floor)" },
-  dryerRooftop: { price: 199.95, label: "Dryer Vent (Rooftop)" },
-  sanitizing: { price: 79.95, label: "Duct Sanitizing" },
-  hrv: { price: 59.95, label: "HRV Cleaning" },
-  humidifier: { price: 69.95, label: "Humidifier Service" },
+  acSurcharge: { price: 29.95, label: "AC Surcharge" },
+  secondFurnace: { price: 99.95, label: "Additional Furnace" },
+  dryerGround: { price: 69.95, label: "Dryer Vent (Main Floor)" },
+  dryerSecondFloor: { price: 149.95, label: "Dryer Vent (2nd Floor)" },
+  dryerRooftop: { price: 199.99, label: "Dryer Vent (Rooftop)" },
+  sanitizing: { price: 79.95, label: "Duct Sanitizing (Benefect)" },
+  hrv: { price: 59.95, label: "HRV / ERV Cleaning" },
+  humidifier: { price: 34.95, label: "Humidifier Pad Replacement" },
+  centralVac: { price: 65.00, label: "Central Vacuum Cleaning" },
 };
 
 export const TIMEFRAME_OPTIONS: TimeframeOption[] = [
-  { value: "asap", label: "As soon as possible", desc: "Within 1-2 days" },
-  { value: "this-week", label: "This week", desc: "Within 3-7 days" },
-  { value: "next-week", label: "Next week or two", desc: "1-2 weeks out" },
-  { value: "flexible", label: "I'm flexible", desc: "Whenever works" },
+  { value: "this-week", label: "This week", desc: "Subject to availability" },
+  { value: "within-2-weeks", label: "Within 2 weeks", desc: "Flexible scheduling" },
+  { value: "exploring", label: "Just exploring", desc: "Get a quote for later" },
 ];
 
 export interface HouseTypeConfig {
@@ -79,16 +64,16 @@ export const HOUSE_TYPES: Record<HouseType, HouseTypeConfig> = {
   apartment: {
     label: "Apartment / Condo",
     icon: "building",
-    defaultVents: 8,
+    defaultVents: 12,
   },
   townhome: {
     label: "Townhome / Duplex",
     icon: "townhouse",
-    defaultVents: 12,
+    defaultVents: 20,
   },
   detached: {
     label: "Detached House",
     icon: "house",
-    defaultVents: 15,
+    defaultVents: 25,
   },
 };

@@ -1,31 +1,36 @@
-export type Step = 1 | 2 | 3 | 4;
+export type Step = 1 | 2 | 3 | 4 | 5;
 
-export type PackageType = "basic" | "pro" | "fullservice";
+export type PackageType = "standard" | "deepclean";
 
 export type DryerVentType = "none" | "ground" | "second-floor" | "rooftop";
 
-export type TimeframeType = "asap" | "this-week" | "next-week" | "flexible";
+export type TimeframeType = "this-week" | "within-2-weeks" | "exploring";
 
 export type HouseType = "apartment" | "townhome" | "detached";
 
 export interface QuoteData {
-  // Step 1: Home basics
+  // Step 1: Home type (auto-sets vents to default)
   houseType: HouseType;
+  // Step 2: Home details
   vents: number;
   furnaces: number;
-  hasHighEfficiency: boolean;
   hasAC: boolean;
+
+  // Step 3: Home features (facts about the home, not purchase decisions)
   hasHRV: boolean;
+  dryerVentLocation: DryerVentType;
+  hasHumidifier: boolean;
+  hasCentralVac: boolean;
 
-  // Step 2: Package
+  // Step 4: Package + add-on selections (purchase decisions)
   package: PackageType;
+  wantsHRV: boolean;
+  wantsSanitizing: boolean;
+  wantsDryerVent: boolean;
+  wantsHumidifier: boolean;
+  wantsCentralVac: boolean;
 
-  // Step 3: Add-ons
-  dryerVent: DryerVentType;
-  sanitizing: boolean;
-  humidifierService: boolean;
-
-  // Step 4: Contact
+  // Step 5: Booking + contact
   timeframe: TimeframeType | "";
   name: string;
   phone: string;
@@ -50,15 +55,15 @@ export interface Addon {
 export type PackagesConfig = Record<PackageType, Package>;
 
 export type AddonsConfig = {
-  bypass: Addon;
+  acSurcharge: Addon;
   secondFurnace: Addon;
-  secondFurnaceHE: Addon;
   dryerGround: Addon;
   dryerSecondFloor: Addon;
   dryerRooftop: Addon;
   sanitizing: Addon;
   hrv: Addon;
   humidifier: Addon;
+  centralVac: Addon;
 };
 
 export interface TimeframeOption {

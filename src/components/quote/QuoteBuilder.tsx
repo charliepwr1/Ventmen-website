@@ -11,8 +11,14 @@ import type {
 } from "@/types";
 import { calculateQuotePrice, formatPrice } from "@/lib/utils/pricing";
 import { submitQuote, type QuoteSubmissionResult } from "@/app/quote/actions";
-import { ProgressBar } from "@/components/ui";
-import { Step1Home, Step2Package, Step3Addons, Step4Review } from "./steps";
+import { ProgressBar, TrustBadges } from "@/components/ui";
+import {
+  Step1Home,
+  Step2HomeDetails,
+  Step3HomeFeatures,
+  Step4Quote,
+  Step5Book,
+} from "./steps";
 
 interface QuoteBuilderProps {
   packages: PackagesConfig;
@@ -20,19 +26,28 @@ interface QuoteBuilderProps {
   timeframeOptions: TimeframeOption[];
 }
 
-const STEP_LABELS = ["Your Home", "Package", "Add-Ons", "Review"];
+const STEP_LABELS = ["Home Type", "Details", "Features", "Your Quote", "Book"];
 
 const initialQuoteData: QuoteData = {
+  // Step 1
   houseType: "detached",
-  vents: 15,
+  // Step 2
+  vents: 25,
   furnaces: 1,
-  hasHighEfficiency: false,
   hasAC: false,
+  // Step 3
   hasHRV: false,
-  package: "pro",
-  dryerVent: "none",
-  sanitizing: false,
-  humidifierService: false,
+  dryerVentLocation: "none",
+  hasHumidifier: false,
+  hasCentralVac: false,
+  // Step 4
+  package: "deepclean",
+  wantsHRV: false,
+  wantsSanitizing: false,
+  wantsDryerVent: false,
+  wantsHumidifier: false,
+  wantsCentralVac: false,
+  // Step 5
   timeframe: "",
   name: "",
   phone: "",
@@ -55,12 +70,8 @@ export default function QuoteBuilder({
     setData((prev) => ({ ...prev, ...updates }));
   };
 
-  const goToStep = (targetStep: Step) => {
-    setStep(targetStep);
-  };
-
   const nextStep = () => {
-    if (step < 4) setStep((step + 1) as Step);
+    if (step < 5) setStep((step + 1) as Step);
   };
 
   const prevStep = () => {
@@ -106,7 +117,7 @@ export default function QuoteBuilder({
               Reference: {submitResult.quoteId}
             </p>
           )}
-          <div className="p-4 bg-white border border-cream-dark mb-6">
+          <div className="p-4 bg-white border border-cream-dark rounded-lg mb-6">
             <span className="text-sm text-charcoal/60">Your quote total</span>
             <span className="block font-display text-3xl font-bold text-orange">
               ${formattedPrice}
@@ -123,26 +134,23 @@ export default function QuoteBuilder({
 
   return (
     <div className="min-h-[60vh] flex flex-col">
-      {/* Quote Header with Progress and Price */}
+      {/* Quote Header with Progress */}
       <div className="py-4 px-6 border-b border-cream-dark bg-cream sticky top-0 z-40">
-        <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex-1">
-            <ProgressBar
-              currentStep={step}
-              totalSteps={4}
-              stepLabels={STEP_LABELS}
-            />
-          </div>
-          <div className="text-right shrink-0">
-            <span className="text-xs text-charcoal/60 uppercase tracking-wide">
-              Your estimate
-            </span>
-            <span className="block font-display text-2xl font-bold text-orange">
-              ${formattedPrice}
-            </span>
-          </div>
+        <div className="max-w-5xl mx-auto">
+          <ProgressBar
+            currentStep={step}
+            totalSteps={5}
+            stepLabels={STEP_LABELS}
+          />
         </div>
       </div>
+
+      {/* Trust Badges (Step 1 only -- saves space on mobile for later steps) */}
+      {step === 1 && (
+        <div className="py-4 px-6 bg-white border-b border-cream-dark">
+          <TrustBadges className="max-w-5xl mx-auto" />
+        </div>
+      )}
 
       {/* Step Content */}
       <div className="flex-grow flex flex-col items-center px-4 py-8">
@@ -151,32 +159,36 @@ export default function QuoteBuilder({
         )}
 
         {step === 2 && (
-          <Step2Package
+          <Step2HomeDetails
             data={data}
             updateData={updateData}
-            packages={packages}
-            addons={addons}
             onNext={nextStep}
             onBack={prevStep}
           />
         )}
 
         {step === 3 && (
-          <Step3Addons
+          <Step3HomeFeatures
             data={data}
             updateData={updateData}
-            addons={addons}
             onNext={nextStep}
             onBack={prevStep}
           />
         )}
 
         {step === 4 && (
-          <Step4Review
+          <Step4Quote
             data={data}
             updateData={updateData}
-            timeframeOptions={timeframeOptions}
-            onEdit={() => goToStep(1)}
+            onNext={nextStep}
+            onBack={prevStep}
+          />
+        )}
+
+        {step === 5 && (
+          <Step5Book
+            data={data}
+            updateData={updateData}
             onBack={prevStep}
             onSubmit={handleSubmit}
             isSubmitting={isPending}

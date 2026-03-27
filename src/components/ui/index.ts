@@ -3,3 +3,5 @@ export { default as VisualSelector } from "./VisualSelector";
 export { default as Stepper } from "./Stepper";
 export { default as ExpandableSection } from "./ExpandableSection";
 export { default as ToggleCard } from "./ToggleCard";
+export { default as TrustBadges } from "./TrustBadges";
+export { default as ToggleSwitch } from "./ToggleSwitch";

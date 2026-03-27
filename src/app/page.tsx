@@ -1,59 +1,47 @@
-import Link from "next/link";
-import Image from "next/image";
+import type { Metadata } from "next";
+import { HeroSetup } from "@/components/v2/HeroSetup";
+import { HeroPunchline } from "@/components/v2/HeroPunchline";
+import { CredentialBar } from "@/components/v2/CredentialBar";
+import { DifferentiatorCards } from "@/components/v2/DifferentiatorCards";
+import { BeforeAfterSlider } from "@/components/v2/BeforeAfterSlider";
+import { QuoteCTA } from "@/components/v2/QuoteCTA";
+import { SocialProof } from "@/components/v2/SocialProof";
+import { AboutMini } from "@/components/v2/AboutMini";
+import { RetroFooter } from "@/components/v2/RetroFooter";
+import { StickyMobileCTA } from "@/components/v2/StickyMobileCTA";
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: "The Vent Men | Video-Verified Duct Cleaning in Calgary",
+  description:
+    "You wouldn't drink dirty water. Stop breathing dirty air. Honest duct cleaning in Calgary.",
+};
+
+export default function HomePage() {
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center px-6 py-12">
-      {/* Logo */}
-      <Image
-        src="/logo-transparent.png"
-        alt="The Vent Men"
-        width={400}
-        height={400}
-        priority
-        sizes="(max-width: 768px) 256px, (max-width: 1024px) 320px, 384px"
-        className="w-64 md:w-80 lg:w-96 h-auto"
-      />
-
-      {/* Tagline */}
-      <p className="mt-8 text-xl md:text-2xl text-charcoal text-center max-w-md">
-        Duct cleaners you&apos;ll actually like.
-      </p>
-
-      {/* Divider */}
-      <div className="divider mt-8 mx-auto"></div>
-
-      {/* CTAs */}
-      <div className="mt-10 flex flex-col sm:flex-row gap-4 w-full max-w-lg">
-        <Link
-          href="/quote"
-          className="btn btn-primary flex-1 text-center justify-center"
-        >
-          My Ducts Are Dirty
-        </Link>
-        <Link
-          href="/work"
-          className="btn btn-outline flex-1 text-center justify-center"
-        >
-          Show Me The Work
-        </Link>
-      </div>
-
-      {/* Trust indicators - subtle */}
-      <div className="mt-16 flex flex-col sm:flex-row items-center gap-6 sm:gap-10 text-sm text-charcoal/60">
-        <span className="flex items-center gap-2">
-          <span className="w-2 h-2 bg-orange rounded-full"></span>
-          Video-Verified
-        </span>
-        <span className="flex items-center gap-2">
-          <span className="w-2 h-2 bg-orange rounded-full"></span>
-          Calgary-Based
-        </span>
-        <span className="flex items-center gap-2">
-          <span className="w-2 h-2 bg-orange rounded-full"></span>
-          Transparent Pricing
-        </span>
-      </div>
+    <div>
+      <noscript>
+        <style>{`
+          .translate-y-8, .translate-y-5, .translate-y-4, .-translate-x-5 {
+            translate: none !important;
+          }
+          .opacity-0 {
+            opacity: 1 !important;
+          }
+          .scale-95 {
+            scale: 1 !important;
+          }
+        `}</style>
+      </noscript>
+      <HeroSetup />
+      <HeroPunchline />
+      <CredentialBar />
+      <DifferentiatorCards />
+      <BeforeAfterSlider />
+      <QuoteCTA />
+      <SocialProof />
+      <AboutMini />
+      <RetroFooter />
+      <StickyMobileCTA />
     </div>
   );
 }

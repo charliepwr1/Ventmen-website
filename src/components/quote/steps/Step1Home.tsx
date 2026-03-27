@@ -1,6 +1,5 @@
 import type { QuoteData, HouseType } from "@/types";
-import { HOUSE_TYPES, INCLUDED_VENTS, ADDONS } from "@/lib/constants";
-import { VisualSelector, Stepper, ToggleCard } from "@/components/ui";
+import { HOUSE_TYPES } from "@/lib/constants";
 
 interface Step1HomeProps {
   data: QuoteData;
@@ -8,131 +7,69 @@ interface Step1HomeProps {
   onNext: () => void;
 }
 
-const houseTypeOptions = (Object.keys(HOUSE_TYPES) as HouseType[]).map(
-  (key) => ({
-    value: key,
-    label: HOUSE_TYPES[key].label,
-    icon: key === "apartment" ? "🏢" : key === "townhome" ? "🏘️" : "🏠",
-  })
-);
+// Emojis used as visual card icons, matching existing pattern and approved wireframes.
+// Replace with SVG icons later if preferred.
+const houseTypeCards: { value: HouseType; icon: string; subtitle: string }[] = [
+  { value: "detached", icon: "\u{1F3E0}", subtitle: "Single family home" },
+  { value: "townhome", icon: "\u{1F3D8}", subtitle: "Attached or semi-detached" },
+  { value: "apartment", icon: "\u{1F3E2}", subtitle: "Multi-unit building" },
+];
 
 export default function Step1Home({
   data,
   updateData,
   onNext,
 }: Step1HomeProps) {
-  const handleHouseTypeChange = (type: HouseType) => {
+  const handleSelect = (type: HouseType) => {
     const config = HOUSE_TYPES[type];
     updateData({
       houseType: type,
       vents: config.defaultVents,
     });
+    // Auto-advance after selection
+    setTimeout(onNext, 150);
   };
-
-  const ventHelperText =
-    data.vents <= INCLUDED_VENTS
-      ? `${INCLUDED_VENTS} included`
-      : `+${data.vents - INCLUDED_VENTS} extra`;
 
   return (
     <div className="w-full max-w-lg mx-auto">
-      <h1 className="font-display text-2xl font-bold text-navy text-center mb-6">
-        Tell Us About Your Home
+      <p className="text-center text-sm text-charcoal/50 mb-4">
+        Get your price in 60 seconds
+      </p>
+      <h1 className="font-display text-2xl font-bold text-navy text-center mb-8">
+        What type of home do you have?
       </h1>
 
-      {/* House Type */}
-      <div className="mb-6">
-        <label className="block font-display text-xs uppercase tracking-wide text-charcoal/60 mb-2">
-          Type of Home
-        </label>
-        <VisualSelector
-          options={houseTypeOptions}
-          value={data.houseType}
-          onChange={handleHouseTypeChange}
-        />
-      </div>
-
-      {/* Number of Vents */}
-      <div className="mb-6">
-        <Stepper
-          label="Number of Vents"
-          value={data.vents}
-          onChange={(vents) => updateData({ vents })}
-          min={1}
-          max={50}
-          helperText={ventHelperText}
-        />
-      </div>
-
-      {/* Number of Furnaces */}
-      <div className="mb-6">
-        <label className="block font-display text-xs uppercase tracking-wide text-charcoal/60 mb-2">
-          Number of Furnaces
-        </label>
-        <div className="flex gap-2">
-          {[1, 2, 3].map((num) => (
+      <div className="flex flex-col gap-3">
+        {houseTypeCards.map((card) => {
+          const isSelected = data.houseType === card.value;
+          return (
             <button
-              key={num}
+              key={card.value}
               type="button"
-              onClick={() => updateData({ furnaces: num })}
-              className={`flex-1 py-3 border transition-colors font-bold ${
-                data.furnaces === num
-                  ? "bg-navy text-white border-navy"
-                  : "bg-white text-navy border-cream-dark hover:border-orange"
+              onClick={() => handleSelect(card.value)}
+              className={`w-full p-5 border-2 rounded-lg text-left transition-all flex items-center gap-4 ${
+                isSelected
+                  ? "border-orange bg-orange/5 shadow-md"
+                  : "border-cream-dark bg-white hover:border-orange/50"
               }`}
             >
-              {num}
+              <span className="text-4xl">{card.icon}</span>
+              <div>
+                <span className="block font-bold text-navy">
+                  {HOUSE_TYPES[card.value].label}
+                </span>
+                <span className="block text-sm text-charcoal/50">
+                  {card.subtitle}
+                </span>
+              </div>
             </button>
-          ))}
-        </div>
+          );
+        })}
       </div>
 
-      {/* Home Features */}
-      <div className="mb-6">
-        <label className="block font-display text-xs uppercase tracking-wide text-charcoal/60 mb-2">
-          Home Features
-        </label>
-        <div className="space-y-2">
-          <ToggleCard
-            selected={data.hasHighEfficiency}
-            onClick={() =>
-              updateData({ hasHighEfficiency: !data.hasHighEfficiency })
-            }
-            price={
-              data.hasHighEfficiency ? `+$${ADDONS.bypass.price}` : undefined
-            }
-            tooltip="High-efficiency furnaces require bypass cleaning"
-          >
-            High-efficiency furnace
-          </ToggleCard>
-
-          <ToggleCard
-            selected={data.hasAC}
-            onClick={() => updateData({ hasAC: !data.hasAC })}
-            price={
-              !data.hasHighEfficiency && data.hasAC
-                ? `+$${ADDONS.bypass.price}`
-                : undefined
-            }
-            tooltip="Central A/C requires bypass cleaning"
-          >
-            Central A/C
-          </ToggleCard>
-
-          <ToggleCard
-            selected={data.hasHRV}
-            onClick={() => updateData({ hasHRV: !data.hasHRV })}
-            price={data.hasHRV ? `+$${ADDONS.hrv.price}` : undefined}
-            tooltip="Heat Recovery Ventilator cleaning"
-          >
-            HRV (Heat Recovery Ventilator)
-          </ToggleCard>
-        </div>
-      </div>
-
-      <button type="button" onClick={onNext} className="btn btn-primary w-full">
-        Continue
-      </button>
+      <p className="text-center text-xs text-charcoal/40 mt-6">
+        Tap to select
+      </p>
     </div>
   );
 }

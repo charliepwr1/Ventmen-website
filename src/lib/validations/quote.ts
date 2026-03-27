@@ -17,17 +17,25 @@ export const quoteContactSchema = z.object({
 });
 
 export const quoteDataSchema = z.object({
+  // Step 1
   houseType: z.enum(["apartment", "townhome", "detached"]),
-  package: z.enum(["basic", "pro", "fullservice"]),
   vents: z.number().min(1).max(100),
   furnaces: z.number().min(1).max(5),
-  hasHighEfficiency: z.boolean(),
+  // Step 2
   hasAC: z.boolean(),
   hasHRV: z.boolean(),
-  dryerVent: z.enum(["none", "ground", "second-floor", "rooftop"]),
-  sanitizing: z.boolean(),
-  humidifierService: z.boolean(),
-  timeframe: z.enum(["asap", "this-week", "next-week", "flexible", ""]),
+  dryerVentLocation: z.enum(["none", "ground", "second-floor", "rooftop"]),
+  hasHumidifier: z.boolean(),
+  hasCentralVac: z.boolean(),
+  // Step 3
+  package: z.enum(["standard", "deepclean"]),
+  wantsHRV: z.boolean(),
+  wantsSanitizing: z.boolean(),
+  wantsDryerVent: z.boolean(),
+  wantsHumidifier: z.boolean(),
+  wantsCentralVac: z.boolean(),
+  // Step 4
+  timeframe: z.enum(["this-week", "within-2-weeks", "exploring", ""]),
   name: z.string(),
   phone: z.string(),
   email: z.string(),
@@ -39,7 +47,7 @@ export const quoteSubmissionSchema = quoteDataSchema.extend({
   email: z.string().email("Please enter a valid email"),
   phone: z.string().min(1, "Phone number is required"),
   address: z.string().min(5, "Please enter a valid address"),
-  timeframe: z.enum(["asap", "this-week", "next-week", "flexible"]),
+  timeframe: z.enum(["this-week", "within-2-weeks", "exploring"]),
 });
 
 export type QuoteContactFormData = z.infer<typeof quoteContactSchema>;
