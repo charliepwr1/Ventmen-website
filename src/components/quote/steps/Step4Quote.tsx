@@ -14,39 +14,28 @@ interface Step4QuoteProps {
   onBack: () => void;
 }
 
+interface AddonItem {
+  id: string;
+  label: string;
+  description: string;
+  standardPrice: number;
+  deepCleanPrice: number;
+  includedInDeepClean: boolean;
+  includedValue: number;
+  wanted: boolean;
+  onToggle: () => void;
+}
+
 export default function Step4Quote({
   data,
   updateData,
   onNext,
   onBack,
 }: Step4QuoteProps) {
-  // Card display prices: computed with FIXED data so they never shift
-  const noAddons: Partial<QuoteData> = {
-    wantsHRV: false,
-    wantsSanitizing: false,
-    wantsDryerVent: false,
-    wantsHumidifier: false,
-    wantsCentralVac: false,
-  };
+  const [showBreakdown, setShowBreakdown] = useState(false);
+  const isDeepClean = data.package === "deepclean";
 
-  const standardCardPrice = calculatePriceForPackage(
-    { ...data, ...noAddons },
-    "standard"
-  );
-
-  const deepCleanCardPrice = calculatePriceForPackage(
-    {
-      ...data,
-      ...noAddons,
-      wantsHRV: data.hasHRV,
-      wantsSanitizing: true,
-      wantsDryerVent: data.dryerVentLocation !== "none",
-    },
-    "deepclean"
-  );
-
-  const decoy = calculateDecoySavings(data);
-
+  // --- Package switch ---
   const handlePackageSelect = (pkg: PackageType) => {
     if (pkg === "deepclean") {
       updateData({
@@ -58,33 +47,175 @@ export default function Step4Quote({
     } else {
       updateData({
         package: pkg,
-        wantsHRV: data.hasHRV,
+        wantsHRV: false,
         wantsSanitizing: false,
         wantsDryerVent: data.dryerVentLocation !== "none",
       });
     }
   };
 
-  const isDeepClean = data.package === "deepclean";
-  const [showBreakdown, setShowBreakdown] = useState(false);
+  // --- Pricing ---
+  // Selected package: live price that updates with add-on toggles
+  const selectedPrice = calculatePriceForPackage(data, data.package);
 
-  // Build line-item breakdown for whichever package is selected
-  const selectedPrice = isDeepClean ? deepCleanCardPrice : standardCardPrice;
+  // Unselected package: fixed base price (no optional add-ons)
+  const noAddons: Partial<QuoteData> = {
+    wantsHRV: false,
+    wantsSanitizing: false,
+    wantsDryerVent: false,
+    wantsHumidifier: false,
+    wantsCentralVac: false,
+  };
+
+  const standardBasePrice = calculatePriceForPackage(
+    { ...data, ...noAddons },
+    "standard"
+  );
+
+  const deepCleanBasePrice = calculatePriceForPackage(
+    {
+      ...data,
+      ...noAddons,
+      wantsHRV: data.hasHRV,
+      wantsSanitizing: true,
+      wantsDryerVent: data.dryerVentLocation !== "none",
+    },
+    "deepclean"
+  );
+
+  // Toggle bar: selected = live, unselected = base
+  const standardDisplayPrice = isDeepClean ? standardBasePrice : selectedPrice;
+  const deepCleanDisplayPrice = isDeepClean ? selectedPrice : deepCleanBasePrice;
+
+  const decoy = calculateDecoySavings(data);
+
+  // --- Build add-on items ---
+  const addonItems: AddonItem[] = [];
+
+  // Sanitizing - always shown
+  addonItems.push({
+    id: "sanitizing",
+    label: "Benefect Duct Sanitizing",
+    description: "Hospital-grade, kills 99.99% of bacteria & mold",
+    standardPrice: ADDONS.sanitizing.price,
+    deepCleanPrice: 0,
+    includedInDeepClean: true,
+    includedValue: ADDONS.sanitizing.price,
+    wanted: data.wantsSanitizing,
+    onToggle: () => updateData({ wantsSanitizing: !data.wantsSanitizing }),
+  });
+
+  // HRV - always shown
+  addonItems.push({
+    id: "hrv",
+    label: "HRV / ERV Cleaning",
+    description: "Clean and service your heat recovery ventilator",
+    standardPrice: ADDONS.hrv.price,
+    deepCleanPrice: 0,
+    includedInDeepClean: true,
+    includedValue: ADDONS.hrv.price,
+    wanted: data.wantsHRV,
+    onToggle: () => updateData({ wantsHRV: !data.wantsHRV }),
+  });
+
+  // Dryer vent - always shown
+  {
+    const hasLocation = data.dryerVentLocation !== "none";
+    const fullPrice = !hasLocation
+      ? ADDONS.dryerGround.price
+      : data.dryerVentLocation === "ground"
+        ? ADDONS.dryerGround.price
+        : data.dryerVentLocation === "second-floor"
+          ? ADDONS.dryerSecondFloor.price
+          : ADDONS.dryerRooftop.price;
+
+    const upgradePrice = !hasLocation
+      ? 0
+      : data.dryerVentLocation === "ground"
+        ? 0
+        : data.dryerVentLocation === "second-floor"
+          ? ADDONS.dryerSecondFloor.price - ADDONS.dryerGround.price
+          : ADDONS.dryerRooftop.price - ADDONS.dryerGround.price;
+
+    const locationLabel = !hasLocation
+      ? ""
+      : data.dryerVentLocation === "ground"
+        ? " (main floor)"
+        : data.dryerVentLocation === "second-floor"
+          ? " (2nd floor)"
+          : " (rooftop)";
+
+    addonItems.push({
+      id: "dryer",
+      label: `Dryer Vent Cleaning${locationLabel}`,
+      description: hasLocation
+        ? "Lint buildup is a leading cause of house fires"
+        : "From $69.95 -- exact price confirmed on-site",
+      standardPrice: fullPrice,
+      deepCleanPrice: upgradePrice,
+      includedInDeepClean: hasLocation && data.dryerVentLocation === "ground",
+      includedValue: ADDONS.dryerGround.price,
+      wanted: data.wantsDryerVent,
+      onToggle: () => {
+        if (!hasLocation && !data.wantsDryerVent) {
+          // Default to main floor when toggling on without a location
+          updateData({ wantsDryerVent: true, dryerVentLocation: "ground" });
+        } else {
+          updateData({ wantsDryerVent: !data.wantsDryerVent });
+        }
+      },
+    });
+  }
+
+  // Humidifier - always shown
+  addonItems.push({
+    id: "humidifier",
+    label: "Humidifier Pad Replacement",
+    description: "Fresh water panel for your furnace humidifier",
+    standardPrice: ADDONS.humidifier.price,
+    deepCleanPrice: ADDONS.humidifier.price,
+    includedInDeepClean: false,
+    includedValue: 0,
+    wanted: data.wantsHumidifier,
+    onToggle: () => updateData({ wantsHumidifier: !data.wantsHumidifier }),
+  });
+
+  // Central vac - always shown
+  addonItems.push({
+    id: "centralVac",
+    label: "Central Vacuum Cleaning",
+    description: "Clean all central vac lines and ports",
+      standardPrice: ADDONS.centralVac.price,
+      deepCleanPrice: ADDONS.centralVac.price,
+      includedInDeepClean: false,
+      includedValue: 0,
+      wanted: data.wantsCentralVac,
+      onToggle: () => updateData({ wantsCentralVac: !data.wantsCentralVac }),
+    });
+
+  // --- Price breakdown lines ---
   const pkg = isDeepClean ? PACKAGES.deepclean : PACKAGES.standard;
-  const breakdownLines: { label: string; amount: number; included?: boolean }[] = [];
+  const breakdownLines: { label: string; amount: number; included?: boolean }[] =
+    [];
 
-  breakdownLines.push({ label: `${pkg.name} base (${INCLUDED_VENTS} vents)`, amount: pkg.price });
+  breakdownLines.push({
+    label: `${pkg.name} (${INCLUDED_VENTS} vents included)`,
+    amount: pkg.price,
+  });
 
   if (data.vents > INCLUDED_VENTS) {
-    const extraVents = data.vents - INCLUDED_VENTS;
+    const extra = data.vents - INCLUDED_VENTS;
     breakdownLines.push({
-      label: `${extraVents} extra vent${extraVents > 1 ? "s" : ""} x $${formatPrice(pkg.perVent)}`,
-      amount: extraVents * pkg.perVent,
+      label: `${extra} extra vent${extra > 1 ? "s" : ""} x $${formatPrice(pkg.perVent)}`,
+      amount: extra * pkg.perVent,
     });
   }
 
   if (data.hasAC) {
-    breakdownLines.push({ label: ADDONS.acSurcharge.label, amount: ADDONS.acSurcharge.price });
+    breakdownLines.push({
+      label: "AC surcharge",
+      amount: ADDONS.acSurcharge.price,
+    });
   }
 
   if (data.furnaces > 1) {
@@ -94,54 +225,31 @@ export default function Step4Quote({
     });
   }
 
-  if (isDeepClean) {
-    // Show included extras as $0 lines
-    if (data.hasHRV) {
-      breakdownLines.push({ label: "HRV/ERV cleaning", amount: 0, included: true });
-    }
-    breakdownLines.push({ label: "Benefect sanitization", amount: 0, included: true });
-    if (data.dryerVentLocation === "ground") {
-      breakdownLines.push({ label: "Dryer vent (main floor)", amount: 0, included: true });
-    } else if (data.dryerVentLocation === "second-floor") {
-      breakdownLines.push({
-        label: "Dryer vent (2nd floor upgrade)",
-        amount: ADDONS.dryerSecondFloor.price - ADDONS.dryerGround.price,
-      });
-    } else if (data.dryerVentLocation === "rooftop") {
-      breakdownLines.push({
-        label: "Dryer vent (rooftop upgrade)",
-        amount: ADDONS.dryerRooftop.price - ADDONS.dryerGround.price,
-      });
+  // Add-on lines from toggled items
+  for (const addon of addonItems) {
+    if (!addon.wanted) continue;
+    const isIncluded = isDeepClean && addon.includedInDeepClean;
+    const price = isDeepClean ? addon.deepCleanPrice : addon.standardPrice;
+
+    if (isIncluded) {
+      breakdownLines.push({ label: addon.label, amount: 0, included: true });
+    } else if (price > 0) {
+      breakdownLines.push({ label: addon.label, amount: price });
     }
   }
 
-  // Build list of extras included in Deep Clean
-  const includedExtras: { label: string; value: number }[] = [];
-  if (data.hasHRV) {
-    includedExtras.push({ label: "HRV/ERV cleaning", value: ADDONS.hrv.price });
-  }
-  includedExtras.push({ label: "Benefect sanitization", value: ADDONS.sanitizing.price });
-  if (data.dryerVentLocation !== "none") {
-    const dryerPrice =
-      data.dryerVentLocation === "ground"
-        ? ADDONS.dryerGround.price
-        : data.dryerVentLocation === "second-floor"
-          ? ADDONS.dryerSecondFloor.price
-          : ADDONS.dryerRooftop.price;
-    const locationLabel =
-      data.dryerVentLocation === "ground"
-        ? "main floor"
-        : data.dryerVentLocation === "second-floor"
-          ? "2nd floor"
-          : "rooftop";
-    includedExtras.push({
-      label: `Dryer vent cleaning (${locationLabel})`,
-      value: dryerPrice,
-    });
-  }
-
-  const showHumidifier = data.hasHumidifier;
-  const showCentralVac = data.hasCentralVac;
+  // --- Feature highlights for selected package ---
+  const features = isDeepClean
+    ? [
+        "Everything in The Standard, plus:",
+        "Second pass with forward skip tool on every vent",
+        "Octopus whip in all trunk lines",
+      ]
+    : [
+        "Air gun on all supply vents",
+        "Back skipper in trunk lines",
+        "Remove & clean blower motor",
+      ];
 
   return (
     <div className="w-full max-w-lg mx-auto">
@@ -149,11 +257,12 @@ export default function Step4Quote({
         Here&apos;s what we recommend
       </h1>
       <p className="text-charcoal/60 text-center text-sm mb-6">
-        Based on your {data.houseType === "apartment" ? "condo" : data.houseType} with{" "}
+        Based on your{" "}
+        {data.houseType === "apartment" ? "condo" : data.houseType} with{" "}
         {data.vents} vents
       </p>
 
-      {/* Package Toggle Bar -- both prices always visible */}
+      {/* Package Toggle Bar */}
       <div className="flex rounded-lg border-2 border-cream-dark overflow-hidden mb-6">
         <button
           type="button"
@@ -172,8 +281,10 @@ export default function Step4Quote({
           <span className="block text-xs font-semibold uppercase tracking-wide opacity-70 mt-1">
             {PACKAGES.deepclean.name}
           </span>
-          <span className={`block text-xl font-extrabold ${isDeepClean ? "text-orange" : ""}`}>
-            ${formatPrice(deepCleanCardPrice)}
+          <span
+            className={`block text-xl font-extrabold ${isDeepClean ? "text-orange" : ""}`}
+          >
+            ${formatPrice(deepCleanDisplayPrice)}
           </span>
         </button>
         <div className="w-px bg-cream-dark" />
@@ -189,82 +300,42 @@ export default function Step4Quote({
           <span className="block text-xs font-semibold uppercase tracking-wide opacity-70">
             {PACKAGES.standard.name}
           </span>
-          <span className={`block text-xl font-extrabold ${!isDeepClean ? "text-orange" : ""}`}>
-            ${formatPrice(standardCardPrice)}
+          <span
+            className={`block text-xl font-extrabold ${!isDeepClean ? "text-orange" : ""}`}
+          >
+            ${formatPrice(standardDisplayPrice)}
           </span>
         </button>
       </div>
 
-      {/* Detail Panel -- updates based on selection */}
+      {/* What's Included Panel */}
       <div className="border-2 border-cream-dark rounded-lg overflow-hidden mb-6">
-        {isDeepClean ? (
-          <>
-            {/* Deep Clean details */}
-            <div className="p-4">
-              <div className="text-xs text-charcoal/50 mb-3">
-                Everything in Standard, plus:
+        <div className="p-4">
+          <div className="space-y-2 text-sm">
+            {features.map((feature) => (
+              <div key={feature} className="flex items-start gap-2">
+                <span
+                  className={`mt-0.5 shrink-0 font-bold ${isDeepClean ? "text-orange" : "text-charcoal/40"}`}
+                >
+                  &#10003;
+                </span>
+                <span className={isDeepClean ? "text-navy" : "text-charcoal/70"}>
+                  {feature}
+                </span>
               </div>
-              <div className="space-y-2 text-sm">
-                <div className="flex items-start gap-2">
-                  <span className="text-orange font-bold mt-0.5 shrink-0">&#10003;</span>
-                  <span className="text-navy">Double-pass cleaning with octopus whip</span>
-                </div>
-                {includedExtras.map((extra) => (
-                  <div key={extra.label} className="flex items-start gap-2">
-                    <span className="text-orange font-bold mt-0.5 shrink-0">&#10003;</span>
-                    <span className="text-navy">
-                      {extra.label}{" "}
-                      <span className="text-orange font-semibold">
-                        (${formatPrice(extra.value)} value)
-                      </span>
-                    </span>
-                  </div>
-                ))}
-              </div>
+            ))}
+          </div>
 
-              {/* Value callout */}
-              {decoy.includedExtrasValue > 0 && (
-                <div className="mt-4 p-2.5 bg-orange/5 rounded-md text-center text-sm text-navy">
-                  <span className="font-bold text-orange">
-                    ${formatPrice(decoy.includedExtrasValue)} in extras included
-                  </span>{" "}
-                  at no additional cost
-                </div>
-              )}
+          {/* Deep Clean value callout */}
+          {isDeepClean && decoy.includedExtrasValue > 0 && (
+            <div className="mt-4 p-2.5 bg-orange/5 rounded-md text-center text-sm text-navy">
+              <span className="font-bold text-orange">
+                ${formatPrice(decoy.includedExtrasValue)} in extras included
+              </span>{" "}
+              at no additional cost
             </div>
-          </>
-        ) : (
-          <>
-            {/* Standard details */}
-            <div className="p-4">
-              <div className="space-y-2 text-sm">
-                <div className="flex items-start gap-2">
-                  <span className="text-charcoal/40 mt-0.5 shrink-0">&#10003;</span>
-                  <span className="text-charcoal/70">Air gun on every supply vent</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-charcoal/40 mt-0.5 shrink-0">&#10003;</span>
-                  <span className="text-charcoal/70">Back skipper in trunk lines</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-charcoal/40 mt-0.5 shrink-0">&#10003;</span>
-                  <span className="text-charcoal/70">Furnace blower cleaning</span>
-                </div>
-              </div>
-
-              {/* Not included */}
-              <div className="mt-4 p-2.5 bg-gray-50 rounded-md text-sm">
-                <div className="font-semibold text-charcoal/60 text-xs mb-1.5">Not included:</div>
-                {includedExtras.map((extra) => (
-                  <div key={extra.label} className="flex justify-between text-charcoal/50 text-xs py-0.5">
-                    <span>{extra.label}</span>
-                    <span className="text-charcoal/60 font-medium">+${formatPrice(extra.value)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </>
-        )}
+          )}
+        </div>
 
         {/* Price Breakdown Toggle */}
         <div className="border-t border-cream-dark">
@@ -280,7 +351,12 @@ export default function Step4Quote({
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </button>
 
@@ -292,7 +368,9 @@ export default function Step4Quote({
                   {line.included ? (
                     <span className="text-orange font-semibold">Included</span>
                   ) : (
-                    <span className="text-charcoal/70 font-medium">${formatPrice(line.amount)}</span>
+                    <span className="text-charcoal/70 font-medium">
+                      ${formatPrice(line.amount)}
+                    </span>
                   )}
                 </div>
               ))}
@@ -305,87 +383,69 @@ export default function Step4Quote({
         </div>
       </div>
 
-      {/* Optional Extras */}
+      {/* Add-ons Section */}
       <div className="mb-6">
         <h3 className="font-display text-xs uppercase tracking-wide text-charcoal/60 mb-3">
-          Optional extras
+          Add-ons
         </h3>
         <div className="space-y-2">
-          {/* Sanitizing */}
-          <div
-            className={`flex items-center justify-between p-3 border-2 rounded-lg transition-colors ${
-              isDeepClean
-                ? "bg-navy/5 border-navy/20"
-                : data.wantsSanitizing
-                  ? "border-orange bg-orange/5"
-                  : "border-cream-dark bg-white hover:border-orange/50"
-            }`}
-          >
-            <button
-              type="button"
-              onClick={
-                isDeepClean
-                  ? undefined
-                  : () => updateData({ wantsSanitizing: !data.wantsSanitizing })
-              }
-              disabled={isDeepClean}
-              className="flex-1 text-left"
-            >
-              <span className="text-sm font-medium text-navy">
-                Benefect Duct Sanitizing
-              </span>
-              <span className="block text-xs text-charcoal/50">
-                Kills 99.99% of bacteria, mold, and fungi
-              </span>
-            </button>
-            <span className="text-sm shrink-0 ml-3">
-              {isDeepClean ? (
-                <span className="text-xs font-bold text-orange">Included</span>
-              ) : (
-                <span className="text-charcoal/60">+${formatPrice(ADDONS.sanitizing.price)}</span>
-              )}
-            </span>
-          </div>
+          {addonItems.map((addon) => {
+            const isIncluded = isDeepClean && addon.includedInDeepClean;
+            const displayPrice = isDeepClean
+              ? addon.deepCleanPrice
+              : addon.standardPrice;
 
-          {/* Humidifier */}
-          {showHumidifier && (
-            <button
-              type="button"
-              onClick={() => updateData({ wantsHumidifier: !data.wantsHumidifier })}
-              className={`w-full flex items-center justify-between p-3 border-2 rounded-lg transition-colors ${
-                data.wantsHumidifier
-                  ? "border-orange bg-orange/5"
-                  : "border-cream-dark bg-white hover:border-orange/50"
-              }`}
-            >
-              <span className="text-sm font-medium text-navy text-left">
-                Humidifier pad replacement
-              </span>
-              <span className="text-sm text-charcoal/60 shrink-0 ml-3">
-                +${formatPrice(ADDONS.humidifier.price)}
-              </span>
-            </button>
-          )}
+            if (isIncluded) {
+              return (
+                <div
+                  key={addon.id}
+                  className="flex items-center justify-between p-3 border-2 rounded-lg bg-navy/5 border-navy/20"
+                >
+                  <div>
+                    <span className="text-sm font-medium text-navy/60">
+                      {addon.label}
+                    </span>
+                    <span className="block text-xs text-charcoal/40">
+                      {addon.description}
+                    </span>
+                  </div>
+                  <div className="text-right shrink-0 ml-3">
+                    <span className="text-xs font-bold text-orange">
+                      Included
+                    </span>
+                    <span className="block text-[10px] text-charcoal/40">
+                      ${formatPrice(addon.includedValue)} value
+                    </span>
+                  </div>
+                </div>
+              );
+            }
 
-          {/* Central Vac */}
-          {showCentralVac && (
-            <button
-              type="button"
-              onClick={() => updateData({ wantsCentralVac: !data.wantsCentralVac })}
-              className={`w-full flex items-center justify-between p-3 border-2 rounded-lg transition-colors ${
-                data.wantsCentralVac
-                  ? "border-orange bg-orange/5"
-                  : "border-cream-dark bg-white hover:border-orange/50"
-              }`}
-            >
-              <span className="text-sm font-medium text-navy text-left">
-                Central vacuum cleaning
-              </span>
-              <span className="text-sm text-charcoal/60 shrink-0 ml-3">
-                +${formatPrice(ADDONS.centralVac.price)}
-              </span>
-            </button>
-          )}
+            return (
+              <button
+                key={addon.id}
+                type="button"
+                onClick={addon.onToggle}
+                className={`w-full flex items-center justify-between p-3 border-2 rounded-lg transition-colors ${
+                  addon.wanted
+                    ? "border-orange bg-orange/5"
+                    : "border-cream-dark bg-white hover:border-orange/50"
+                }`}
+              >
+                <div className="text-left">
+                  <span className="text-sm font-medium text-navy">
+                    {addon.label}
+                  </span>
+                  <span className="block text-xs text-charcoal/50">
+                    {addon.description}
+                  </span>
+                </div>
+                <span className="text-sm text-charcoal/60 shrink-0 ml-3">
+                  +${formatPrice(displayPrice)}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -394,7 +454,9 @@ export default function Step4Quote({
         <div className="flex flex-col gap-2 text-sm">
           <div className="flex items-center gap-2">
             <span className="text-orange">&#10003;</span>
-            <span className="text-charcoal/70">Video documentation of every vent</span>
+            <span className="text-charcoal/70">
+              Video documentation of every vent
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-orange">&#10003;</span>
