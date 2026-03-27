@@ -1,5 +1,7 @@
 // src/app/v2/page.tsx
 import type { Metadata } from "next";
+import { HeroSetup } from "@/components/v2/HeroSetup";
+import { HeroPunchline } from "@/components/v2/HeroPunchline";
 
 export const metadata: Metadata = {
   title: "Home V2 | The Vent Men",
@@ -11,15 +13,8 @@ export const metadata: Metadata = {
 export default function V2HomePage() {
   return (
     <div>
-      {/* Sections will be added here */}
-      <section className="min-h-screen flex items-center justify-center bg-[var(--navy)]">
-        <h1
-          className="text-4xl font-bold text-[var(--cream)] uppercase"
-          style={{ fontFamily: "var(--font-oswald)" }}
-        >
-          V2 Homepage Shell
-        </h1>
-      </section>
+      <HeroSetup />
+      <HeroPunchline />
     </div>
   );
 }
