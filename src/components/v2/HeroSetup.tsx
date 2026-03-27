@@ -3,7 +3,7 @@
 export function HeroSetup() {
   return (
     <section
-      className="relative flex min-h-[100dvh] flex-col items-center justify-center bg-[var(--navy)] px-6 text-center"
+      className="relative flex min-h-[75dvh] flex-col items-center justify-center bg-[var(--navy)] px-6 py-20 text-center"
     >
       {/* Location pill */}
       <span
@@ -15,7 +15,7 @@ export function HeroSetup() {
 
       {/* Setup headline */}
       <h1
-        className="text-[1.8rem] leading-[1.05] font-bold uppercase tracking-[0.03em] text-[var(--cream)] md:text-[3rem]"
+        className="text-[2.5rem] leading-[1.0] font-bold uppercase tracking-[0.03em] text-[var(--cream)] md:text-[4rem]"
         style={{ fontFamily: "var(--font-oswald)" }}
       >
         You wouldn&apos;t
