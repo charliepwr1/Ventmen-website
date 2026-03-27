@@ -1,27 +1,28 @@
-export type Step = 1 | 2 | 3 | 4;
+export type Step = 1 | 2 | 3 | 4 | 5;
 
 export type PackageType = "standard" | "deepclean";
 
 export type DryerVentType = "none" | "ground" | "second-floor" | "rooftop";
 
-export type TimeframeType = "asap" | "this-week" | "next-week" | "flexible";
+export type TimeframeType = "this-week" | "within-2-weeks" | "exploring";
 
 export type HouseType = "apartment" | "townhome" | "detached";
 
 export interface QuoteData {
-  // Step 1: Home basics
+  // Step 1: Home type (auto-sets vents to default)
   houseType: HouseType;
+  // Step 2: Home details
   vents: number;
   furnaces: number;
-
-  // Step 2: Home features (facts about the home, not purchase decisions)
   hasAC: boolean;
+
+  // Step 3: Home features (facts about the home, not purchase decisions)
   hasHRV: boolean;
   dryerVentLocation: DryerVentType;
   hasHumidifier: boolean;
   hasCentralVac: boolean;
 
-  // Step 3: Package + add-on selections (purchase decisions)
+  // Step 4: Package + add-on selections (purchase decisions)
   package: PackageType;
   wantsHRV: boolean;
   wantsSanitizing: boolean;
@@ -29,7 +30,7 @@ export interface QuoteData {
   wantsHumidifier: boolean;
   wantsCentralVac: boolean;
 
-  // Step 4: Contact
+  // Step 5: Booking + contact
   timeframe: TimeframeType | "";
   name: string;
   phone: string;
