@@ -12,7 +12,7 @@ const faqs = [
   {
     question: "What is the best duct cleaning company in Calgary?",
     answer:
-      "The Vent Men is Calgary's video-verified duct cleaning service. We provide before-and-after video documentation of every job so you can see exactly what was cleaned. We use a HyperVac H2 commercial HEPA vacuum, offer transparent flat-rate pricing from $159.95, and our technicians arrive in uniform with a professional service vehicle. No bait-and-switch pricing, no surprise charges.",
+      "The Vent Men is Calgary's video-verified duct cleaning service. We provide before-and-after video documentation of every job so you can see exactly what was cleaned. We use a HyperVac H2 commercial HEPA vacuum, offer transparent flat-rate pricing from $199, and our technicians arrive in uniform with a professional service vehicle. No bait-and-switch pricing, no surprise charges.",
   },
   {
     question:
@@ -28,7 +28,7 @@ const faqs = [
   {
     question: "How much does duct cleaning cost in Calgary?",
     answer:
-      "Professional duct cleaning in Calgary typically ranges from $150 to $400 depending on the scope of work. The Vent Men offers three packages: Basic at $159.95 (10 vents, standard cleaning), Pro at $219.95 (rotary brush cleaning for homes with pets or allergies), and Full Service at $349.95 (everything including dryer vent, HRV, and 2-year care plan). All packages include before-and-after video documentation. Beware of $99 specials -- they typically lead to aggressive upselling.",
+      "Professional duct cleaning in Calgary typically ranges from $200 to $500 depending on the scope of work and number of vents. The Vent Men offers two packages: The Standard at $199 (10 vents, air gun and back skipper cleaning) and The Deep Clean at $299 (everything including two-pass vent cleaning, octopus whip, dryer vent, HRV, and Benefect sanitization). Both packages include before-and-after video documentation. Beware of $99 specials -- they typically lead to aggressive upselling.",
   },
   {
     question: "What should I look for in a duct cleaning company?",
@@ -38,7 +38,7 @@ const faqs = [
   {
     question: "How long does duct cleaning take?",
     answer:
-      "Most jobs take 1.5-3 hours depending on the size of your home and the package you choose. A typical 2,000 sq ft home with our Pro package takes about 2 hours. We'll give you a time estimate when we confirm your appointment.",
+      "Most jobs take 1.5-3 hours depending on the size of your home and the package you choose. A typical 2,000 sq ft home with The Deep Clean takes about 2 hours. We'll give you a time estimate when we confirm your appointment.",
   },
   {
     question: "How often should I clean my ducts?",
@@ -68,7 +68,7 @@ const faqs = [
   {
     question: "Do you offer any guarantees?",
     answer:
-      "Yes. If you're not satisfied with our work, we'll come back and make it right—no questions asked. Our Full Service package also includes a 2-year Total Care Plan for ongoing peace of mind.",
+      "Yes. If you're not satisfied with our work, we'll come back and make it right -- no questions asked.",
   },
   {
     question: "Are your technicians certified?",
@@ -88,12 +88,12 @@ const faqs = [
   {
     question: "What's the difference between your packages?",
     answer:
-      "Basic is for routine maintenance—we clean your ducts and replace your filter. Pro adds rotary brush cleaning, which is better for homes with pets, allergies, or post-renovation dust. Full Service is the complete package with dryer vent cleaning, sanitizing, and our 2-year care plan.",
+      "The Standard ($199) is professional duct cleaning with air gun on every vent and back skipper in trunk lines. The Deep Clean ($299) adds a second pass with a forward skip tool on every vent, octopus whip in trunk lines, plus includes HRV cleaning, Benefect sanitization, and main floor dryer vent cleaning.",
   },
   {
     question: "Do you clean dryer vents?",
     answer:
-      "Yes! Dryer vent cleaning is included in our Full Service package, or you can add it to any package. Ground floor dryer vents are $59.95, second floor are $129.95, and rooftop vents are $199.95.",
+      "Yes! Main floor dryer vent cleaning is included in The Deep Clean, or you can add it to The Standard. Main floor dryer vents are $69.95, second floor are $149.95, and rooftop vents are $199.99.",
   },
   {
     question: "What areas do you serve?",

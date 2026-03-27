@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Services & Pricing | The Vent Men",
   description:
-    "Transparent duct cleaning pricing in Calgary. Choose from Basic, Pro, or Full Service packages. No hidden fees, video-verified results.",
+    "Transparent duct cleaning pricing in Calgary. The Standard and The Deep Clean packages. No hidden fees, video-verified results.",
 };
 
 const CheckIcon = () => (
@@ -65,7 +65,7 @@ export default function ServicesPage() {
             All packages include {INCLUDED_VENTS} vents, furnace filter replacement, and our video verification process.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {packageKeys.map((key) => {
               const pkg = PACKAGES[key];
               return (
@@ -87,9 +87,8 @@ export default function ServicesPage() {
                     <p className="text-sm text-charcoal/60 mb-4">{pkg.tagline}</p>
                     <div className="flex items-baseline justify-center gap-1">
                       <span className="font-display text-4xl font-bold text-navy">
-                        ${pkg.price.toFixed(0)}
+                        ${pkg.price}
                       </span>
-                      <span className="text-charcoal/60 text-sm">.95</span>
                     </div>
                     <p className="text-xs text-charcoal/50 mt-1">
                       +${pkg.perVent}/vent over {INCLUDED_VENTS}
@@ -208,10 +207,10 @@ export default function ServicesPage() {
           </h2>
           <div className="mt-8 grid gap-6 md:grid-cols-2">
             {[
-              { href: '/services/furnace-cleaning', title: 'Furnace Cleaning', desc: 'Complete furnace cleaning including blower motor, filter, and heat exchanger inspection. From $159.95.' },
-              { href: '/services/duct-cleaning', title: 'Duct Cleaning', desc: 'Professional air duct cleaning with before-and-after video documentation. From $159.95.' },
-              { href: '/services/dryer-vent-cleaning', title: 'Dryer Vent Cleaning', desc: 'Prevent dryer fires and improve efficiency. From $59.95.' },
-              { href: '/services/full-system-cleaning', title: 'Full HVAC System Cleaning', desc: 'Everything included -- furnace, ducts, dryer vent, HRV, and more. $349.95.' },
+              { href: '/services/furnace-cleaning', title: 'Furnace Cleaning', desc: 'Complete furnace cleaning including blower motor, filter, and heat exchanger inspection. From $199.' },
+              { href: '/services/duct-cleaning', title: 'Duct Cleaning', desc: 'Professional air duct cleaning with before-and-after video documentation. From $199.' },
+              { href: '/services/dryer-vent-cleaning', title: 'Dryer Vent Cleaning', desc: 'Prevent dryer fires and improve efficiency. From $69.95.' },
+              { href: '/services/full-system-cleaning', title: 'The Deep Clean', desc: 'Everything included -- furnace, ducts, dryer vent, HRV, sanitization, and more. $299.' },
             ].map((svc) => (
               <Link key={svc.href} href={svc.href} className="card block p-6 transition-colors hover:border-orange">
                 <h3 className="font-display text-lg font-semibold uppercase text-navy">{svc.title}</h3>

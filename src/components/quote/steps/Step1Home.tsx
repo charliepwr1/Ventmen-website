@@ -1,6 +1,6 @@
 import type { QuoteData, HouseType } from "@/types";
-import { HOUSE_TYPES, INCLUDED_VENTS, ADDONS } from "@/lib/constants";
-import { VisualSelector, Stepper, ToggleCard } from "@/components/ui";
+import { HOUSE_TYPES, INCLUDED_VENTS } from "@/lib/constants";
+import { VisualSelector, Stepper } from "@/components/ui";
 
 interface Step1HomeProps {
   data: QuoteData;
@@ -31,8 +31,8 @@ export default function Step1Home({
 
   const ventHelperText =
     data.vents <= INCLUDED_VENTS
-      ? `${INCLUDED_VENTS} included`
-      : `+${data.vents - INCLUDED_VENTS} extra`;
+      ? `${INCLUDED_VENTS} included in every package`
+      : `${INCLUDED_VENTS} included + ${data.vents - INCLUDED_VENTS} extra`;
 
   return (
     <div className="w-full max-w-lg mx-auto">
@@ -84,49 +84,6 @@ export default function Step1Home({
               {num}
             </button>
           ))}
-        </div>
-      </div>
-
-      {/* Home Features */}
-      <div className="mb-6">
-        <label className="block font-display text-xs uppercase tracking-wide text-charcoal/60 mb-2">
-          Home Features
-        </label>
-        <div className="space-y-2">
-          <ToggleCard
-            selected={data.hasHighEfficiency}
-            onClick={() =>
-              updateData({ hasHighEfficiency: !data.hasHighEfficiency })
-            }
-            price={
-              data.hasHighEfficiency ? `+$${ADDONS.bypass.price}` : undefined
-            }
-            tooltip="High-efficiency furnaces require bypass cleaning"
-          >
-            High-efficiency furnace
-          </ToggleCard>
-
-          <ToggleCard
-            selected={data.hasAC}
-            onClick={() => updateData({ hasAC: !data.hasAC })}
-            price={
-              !data.hasHighEfficiency && data.hasAC
-                ? `+$${ADDONS.bypass.price}`
-                : undefined
-            }
-            tooltip="Central A/C requires bypass cleaning"
-          >
-            Central A/C
-          </ToggleCard>
-
-          <ToggleCard
-            selected={data.hasHRV}
-            onClick={() => updateData({ hasHRV: !data.hasHRV })}
-            price={data.hasHRV ? `+$${ADDONS.hrv.price}` : undefined}
-            tooltip="Heat Recovery Ventilator cleaning"
-          >
-            HRV (Heat Recovery Ventilator)
-          </ToggleCard>
         </div>
       </div>
 

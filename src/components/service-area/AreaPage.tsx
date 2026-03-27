@@ -109,10 +109,10 @@ export function AreaPage({ slug }: { slug: AreaSlug }) {
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {[
-              { href: '/services/furnace-cleaning', title: 'Furnace Cleaning', price: 'From $159.95' },
-              { href: '/services/duct-cleaning', title: 'Duct Cleaning', price: 'From $159.95' },
-              { href: '/services/dryer-vent-cleaning', title: 'Dryer Vent Cleaning', price: 'From $59.95' },
-              { href: '/services/full-system-cleaning', title: 'Full System Cleaning', price: '$349.95' },
+              { href: '/services/furnace-cleaning', title: 'Furnace Cleaning', price: 'From $199' },
+              { href: '/services/duct-cleaning', title: 'Duct Cleaning', price: 'From $199' },
+              { href: '/services/dryer-vent-cleaning', title: 'Dryer Vent Cleaning', price: 'From $69.95' },
+              { href: '/services/full-system-cleaning', title: 'The Deep Clean', price: '$299' },
             ].map((svc) => (
               <Link key={svc.href} href={svc.href} className="card block p-5 transition-colors hover:border-orange">
                 <h3 className="font-display font-semibold uppercase text-navy">{svc.title}</h3>

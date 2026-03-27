@@ -17,16 +17,24 @@ export const quoteContactSchema = z.object({
 });
 
 export const quoteDataSchema = z.object({
+  // Step 1
   houseType: z.enum(["apartment", "townhome", "detached"]),
-  package: z.enum(["basic", "pro", "fullservice"]),
   vents: z.number().min(1).max(100),
   furnaces: z.number().min(1).max(5),
-  hasHighEfficiency: z.boolean(),
+  // Step 2
   hasAC: z.boolean(),
   hasHRV: z.boolean(),
-  dryerVent: z.enum(["none", "ground", "second-floor", "rooftop"]),
-  sanitizing: z.boolean(),
-  humidifierService: z.boolean(),
+  dryerVentLocation: z.enum(["none", "ground", "second-floor", "rooftop"]),
+  hasHumidifier: z.boolean(),
+  hasCentralVac: z.boolean(),
+  // Step 3
+  package: z.enum(["standard", "deepclean"]),
+  wantsHRV: z.boolean(),
+  wantsSanitizing: z.boolean(),
+  wantsDryerVent: z.boolean(),
+  wantsHumidifier: z.boolean(),
+  wantsCentralVac: z.boolean(),
+  // Step 4
   timeframe: z.enum(["asap", "this-week", "next-week", "flexible", ""]),
   name: z.string(),
   phone: z.string(),

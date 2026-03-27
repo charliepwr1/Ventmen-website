@@ -112,7 +112,7 @@ export default function Home() {
 
               {/* Subhead */}
               <p className="text-lg md:text-xl text-cream/80 max-w-xl mb-8">
-                The Vent Men is Calgary&apos;s video-verified furnace and duct cleaning service. We document every job with before-and-after video so you can see exactly what was in your system. Flat-rate pricing from $159.95. Commercial-grade HyperVac H2 equipment. Professional, uniformed technicians.
+                The Vent Men is Calgary&apos;s video-verified furnace and duct cleaning service. We document every job with before-and-after video so you can see exactly what was in your system. Flat-rate pricing from $199. Commercial-grade HyperVac H2 equipment. Professional, uniformed technicians.
               </p>
 
               {/* Divider */}
@@ -367,7 +367,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             {packageKeys.map((key) => {
               const pkg = PACKAGES[key];
               return (
@@ -394,9 +394,8 @@ export default function Home() {
                     </span>
                     <div className="flex items-baseline justify-center gap-1">
                       <span className="font-display text-3xl font-bold text-navy">
-                        ${pkg.price.toFixed(0)}
+                        ${pkg.price}
                       </span>
-                      <span className="text-charcoal/60 text-sm">.95</span>
                     </div>
                     <p className="text-xs text-charcoal/40 mt-1">
                       Includes {INCLUDED_VENTS} vents + video verification

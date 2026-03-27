@@ -1,5 +1,6 @@
 import type { QuoteData } from "@/types";
 import { PACKAGES, ADDONS, INCLUDED_VENTS } from "@/lib/constants";
+import { formatPrice } from "@/lib/utils/pricing";
 
 interface QuoteSummaryProps {
   data: QuoteData;
@@ -14,87 +15,108 @@ interface LineItem {
 
 export default function QuoteSummary({ data, onEdit }: QuoteSummaryProps) {
   const pkg = PACKAGES[data.package];
+  const isDeepClean = data.package === "deepclean";
   const lineItems: LineItem[] = [];
 
   // Base package
-  lineItems.push({ label: `${pkg.name} Package`, amount: pkg.price });
+  lineItems.push({ label: pkg.name, amount: pkg.price });
 
   // Extra vents
   if (data.vents > INCLUDED_VENTS) {
     const extraVents = data.vents - INCLUDED_VENTS;
     lineItems.push({
-      label: `${data.vents} vents (${extraVents} extra × $${pkg.perVent})`,
+      label: `${data.vents} vents (${extraVents} extra x $${pkg.perVent})`,
       amount: extraVents * pkg.perVent,
       isSubItem: true,
     });
   }
 
-  // Bypass fee
-  if (data.hasHighEfficiency || data.hasAC) {
+  // AC surcharge
+  if (data.hasAC) {
     lineItems.push({
-      label: "High-efficiency / A/C bypass",
-      amount: ADDONS.bypass.price,
+      label: ADDONS.acSurcharge.label,
+      amount: ADDONS.acSurcharge.price,
       isSubItem: true,
     });
   }
 
   // Extra furnaces
   if (data.furnaces > 1) {
-    const furnacePrice =
-      data.package === "fullservice"
-        ? ADDONS.secondFurnaceHE.price
-        : ADDONS.secondFurnace.price;
     lineItems.push({
       label: `Additional furnace${data.furnaces > 2 ? "s" : ""} (${data.furnaces - 1})`,
-      amount: (data.furnaces - 1) * furnacePrice,
+      amount: (data.furnaces - 1) * ADDONS.secondFurnace.price,
       isSubItem: true,
     });
   }
 
-  // HRV
-  if (data.hasHRV) {
+  // HRV (included in Deep Clean)
+  if (data.wantsHRV || isDeepClean) {
     lineItems.push({
-      label: ADDONS.hrv.label,
-      amount: ADDONS.hrv.price,
+      label: isDeepClean
+        ? `${ADDONS.hrv.label} (included)`
+        : ADDONS.hrv.label,
+      amount: isDeepClean ? 0 : ADDONS.hrv.price,
+    });
+  }
+
+  // Sanitizing (included in Deep Clean)
+  if (data.wantsSanitizing || isDeepClean) {
+    lineItems.push({
+      label: isDeepClean
+        ? `${ADDONS.sanitizing.label} (included)`
+        : ADDONS.sanitizing.label,
+      amount: isDeepClean ? 0 : ADDONS.sanitizing.price,
     });
   }
 
   // Dryer vent
-  if (data.dryerVent === "ground" && data.package !== "fullservice") {
-    lineItems.push({
-      label: ADDONS.dryerGround.label,
-      amount: ADDONS.dryerGround.price,
-    });
-  } else if (data.dryerVent === "second-floor") {
-    lineItems.push({
-      label: ADDONS.dryerSecondFloor.label,
-      amount: ADDONS.dryerSecondFloor.price,
-    });
-  } else if (data.dryerVent === "rooftop") {
-    lineItems.push({
-      label: ADDONS.dryerRooftop.label,
-      amount: ADDONS.dryerRooftop.price,
-    });
-  } else if (data.dryerVent === "ground" && data.package === "fullservice") {
-    lineItems.push({
-      label: `${ADDONS.dryerGround.label} (included)`,
-      amount: 0,
-    });
-  }
+  if (data.wantsDryerVent && data.dryerVentLocation !== "none") {
+    const locationLabel =
+      data.dryerVentLocation === "ground"
+        ? "Main Floor"
+        : data.dryerVentLocation === "second-floor"
+          ? "2nd Floor"
+          : "Rooftop";
 
-  // Sanitizing
-  if (data.sanitizing) {
-    lineItems.push({
-      label: ADDONS.sanitizing.label,
-      amount: ADDONS.sanitizing.price,
-    });
+    if (data.dryerVentLocation === "ground") {
+      lineItems.push({
+        label: isDeepClean
+          ? `Dryer Vent - ${locationLabel} (included)`
+          : `Dryer Vent - ${locationLabel}`,
+        amount: isDeepClean ? 0 : ADDONS.dryerGround.price,
+      });
+    } else if (data.dryerVentLocation === "second-floor") {
+      const price = isDeepClean
+        ? ADDONS.dryerSecondFloor.price - ADDONS.dryerGround.price
+        : ADDONS.dryerSecondFloor.price;
+      lineItems.push({
+        label: `Dryer Vent - ${locationLabel}${isDeepClean ? " (upgrade)" : ""}`,
+        amount: price,
+      });
+    } else if (data.dryerVentLocation === "rooftop") {
+      const price = isDeepClean
+        ? ADDONS.dryerRooftop.price - ADDONS.dryerGround.price
+        : ADDONS.dryerRooftop.price;
+      lineItems.push({
+        label: `Dryer Vent - ${locationLabel}${isDeepClean ? " (upgrade)" : ""}`,
+        amount: price,
+      });
+    }
   }
 
   // Humidifier
-  if (data.humidifierService) {
+  if (data.wantsHumidifier) {
     lineItems.push({
       label: ADDONS.humidifier.label,
       amount: ADDONS.humidifier.price,
+    });
+  }
+
+  // Central vac
+  if (data.wantsCentralVac) {
+    lineItems.push({
+      label: ADDONS.centralVac.label,
+      amount: ADDONS.centralVac.price,
     });
   }
 
@@ -120,7 +142,7 @@ export default function QuoteSummary({ data, onEdit }: QuoteSummaryProps) {
           >
             <span>{item.isSubItem ? `└ ${item.label}` : item.label}</span>
             <span>
-              {item.amount > 0 ? `$${item.amount.toFixed(2)}` : "Included"}
+              {item.amount > 0 ? `$${formatPrice(item.amount)}` : "Included"}
             </span>
           </div>
         ))}
@@ -129,15 +151,15 @@ export default function QuoteSummary({ data, onEdit }: QuoteSummaryProps) {
       <div className="p-4 border-t border-cream-dark space-y-1">
         <div className="flex justify-between text-sm text-charcoal/60">
           <span>Subtotal</span>
-          <span>${subtotal.toFixed(2)}</span>
+          <span>${formatPrice(subtotal)}</span>
         </div>
         <div className="flex justify-between text-sm text-charcoal/60">
           <span>GST (5%)</span>
-          <span>${gst.toFixed(2)}</span>
+          <span>${formatPrice(gst)}</span>
         </div>
         <div className="flex justify-between font-display text-lg font-bold text-navy pt-2">
           <span>Total</span>
-          <span className="text-orange">${total.toFixed(2)}</span>
+          <span className="text-orange">${formatPrice(total)}</span>
         </div>
       </div>
 

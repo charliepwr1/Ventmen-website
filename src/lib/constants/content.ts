@@ -7,12 +7,12 @@
 export const SERVICE_CONTENT = {
   'furnace-cleaning': {
     title: 'Furnace Cleaning in Calgary',
-    metaTitle: 'Furnace Cleaning Calgary | From $159.95 | Video-Verified',
+    metaTitle: 'Furnace Cleaning Calgary | From $199 | Video-Verified',
     metaDescription:
-      'Professional furnace cleaning in Calgary starting at $159.95. Includes blower motor cleaning, filter replacement, and before-and-after video documentation sent directly to your phone. The Vent Men.',
+      'Professional furnace cleaning in Calgary starting at $199. Includes blower motor cleaning, filter replacement, and before-and-after video documentation sent directly to your phone. The Vent Men.',
     // Answer-first: the first thing on the page, directly answering the search query
     answerBlock:
-      'A professional furnace cleaning from The Vent Men costs $159.95 and includes a complete blower motor cleaning, filter replacement, heat exchanger inspection, and before-and-after video documentation sent directly to your phone. We serve Calgary, Okotoks, Cochrane, Chestermere, and surrounding communities.',
+      'A professional furnace cleaning from The Vent Men starts at $199 and includes a complete blower motor cleaning, filter replacement, heat exchanger inspection, and before-and-after video documentation sent directly to your phone. We serve Calgary, Okotoks, Cochrane, Chestermere, and surrounding communities.',
     whatIsIncluded: [
       'Complete blower motor removal and cleaning',
       'Furnace filter replacement',
@@ -33,7 +33,7 @@ export const SERVICE_CONTENT = {
     faqs: [
       {
         question: 'How much does furnace cleaning cost in Calgary?',
-        answer: 'Our furnace cleaning starts at $159.95 and includes 10 vents, blower motor cleaning, filter replacement, and before-and-after video documentation. Extra vents are $9.95 each. No hidden fees or surprise charges.',
+        answer: 'Our furnace cleaning starts at $199 (The Standard) and includes 10 vents, blower motor cleaning, filter replacement, and before-and-after video documentation. Extra vents are $11.95 each. No hidden fees or surprise charges.',
       },
       {
         question: 'How often should I get my furnace cleaned?',
@@ -49,30 +49,30 @@ export const SERVICE_CONTENT = {
       },
       {
         question: 'Do you clean high-efficiency furnaces?',
-        answer: 'Yes. We clean all furnace types including standard, mid-efficiency, and high-efficiency (condensing) furnaces. High-efficiency units have additional components like secondary heat exchangers and condensate drains that we inspect and clean.',
+        answer: 'Yes. We clean all furnace types including standard, mid-efficiency, and high-efficiency (condensing) furnaces. No HE surcharge. High-efficiency units have additional components like secondary heat exchangers and condensate drains that we inspect and clean.',
       },
     ],
   },
 
   'duct-cleaning': {
     title: 'Duct Cleaning in Calgary',
-    metaTitle: 'Duct Cleaning Calgary | From $159.95 | Before & After Video Proof',
+    metaTitle: 'Duct Cleaning Calgary | From $199 | Before & After Video Proof',
     metaDescription:
-      'Professional duct cleaning in Calgary with before-and-after video documentation. See what is actually in your ducts. Flat-rate pricing from $159.95. The Vent Men.',
+      'Professional duct cleaning in Calgary with before-and-after video documentation. See what is actually in your ducts. Flat-rate pricing from $199. The Vent Men.',
     answerBlock:
-      'Professional duct cleaning in Calgary from The Vent Men starts at $159.95 for 10 vents and includes before-and-after video documentation so you can see exactly what was in your system. We use a HyperVac H2 commercial HEPA vacuum -- not a residential shop-vac. Serving Calgary, Okotoks, Cochrane, Chestermere, and area.',
+      'Professional duct cleaning in Calgary from The Vent Men starts at $199 for 10 vents and includes before-and-after video documentation so you can see exactly what was in your system. We use a HyperVac H2 commercial HEPA vacuum -- not a residential shop-vac. Serving Calgary, Okotoks, Cochrane, Chestermere, and area.',
     whatIsIncluded: [
       'Cleaning of all supply and return air ducts (10 vents included)',
       'Main trunk line cleaning',
       'Register removal and cleaning',
       'Before-and-after video documentation',
       'Same-day video report sent to your phone',
-      'Furnace filter check',
+      'Furnace filter replacement',
     ],
     process: [
       { step: 'System Assessment', description: 'We inspect your ductwork layout, identify all supply and return vents, and note any areas of concern. We explain the full scope of work before starting.' },
       { step: 'Before Video', description: 'We insert a camera into your ductwork and record what is inside -- dust, debris, construction materials, pet hair, whatever has accumulated. This is your baseline proof.' },
-      { step: 'Source Removal Cleaning', description: 'We connect the HyperVac H2 to your main trunk line, creating powerful negative pressure throughout the system. Each vent is cleaned individually using compressed air tools or rotary brushes (Pro package) to dislodge debris and push it toward the vacuum.' },
+      { step: 'Source Removal Cleaning', description: 'We connect the HyperVac H2 to your main trunk line, creating powerful negative pressure throughout the system. Each vent is cleaned individually using compressed air tools and back skipper in trunk lines (The Standard) or with additional forward skip and octopus whip passes (The Deep Clean).' },
       { step: 'Verification & After Video', description: 'We re-inspect with the camera to verify all ducts are clean. We record after footage of the same areas so you can compare side-by-side.' },
       { step: 'Report Delivery', description: 'You receive a video report the same day showing before-and-after footage of your ductwork. No more wondering if the job was actually done.' },
     ],
@@ -81,7 +81,7 @@ export const SERVICE_CONTENT = {
     faqs: [
       {
         question: 'How much does duct cleaning cost in Calgary?',
-        answer: 'Duct cleaning from The Vent Men starts at $159.95 for 10 vents. Extra vents are $9.95 each (Basic) or $13.95 each (Pro with rotary brush). Our Pro package at $219.95 is recommended for homes with pets or allergies. All packages include before-and-after video documentation.',
+        answer: 'Duct cleaning from The Vent Men starts at $199 for 10 vents (The Standard). Extra vents are $11.95 each. The Deep Clean at $299 adds a second pass on every vent, octopus whip in trunk lines, plus HRV cleaning, Benefect sanitization, and main floor dryer vent -- all included. Both packages include before-and-after video documentation.',
       },
       {
         question: 'What is the difference between a $99 duct cleaning special and a real cleaning?',
@@ -108,11 +108,11 @@ export const SERVICE_CONTENT = {
 
   'dryer-vent-cleaning': {
     title: 'Dryer Vent Cleaning in Calgary',
-    metaTitle: 'Dryer Vent Cleaning Calgary | From $59.95 | Fire Prevention',
+    metaTitle: 'Dryer Vent Cleaning Calgary | From $69.95 | Fire Prevention',
     metaDescription:
-      'Professional dryer vent cleaning in Calgary from $59.95. Prevent dryer fires, reduce drying times, and lower energy bills. The Vent Men.',
+      'Professional dryer vent cleaning in Calgary from $69.95. Prevent dryer fires, reduce drying times, and lower energy bills. The Vent Men.',
     answerBlock:
-      'Dryer vent cleaning from The Vent Men starts at $59.95 for ground-floor vents in Calgary. Clogged dryer vents are a leading cause of house fires in Canada -- lint buildup restricts airflow, causes overheating, and can ignite. We clean the full vent run from dryer to exterior exhaust.',
+      'Dryer vent cleaning from The Vent Men starts at $69.95 for main floor vents in Calgary. Clogged dryer vents are a leading cause of house fires in Canada -- lint buildup restricts airflow, causes overheating, and can ignite. We clean the full vent run from dryer to exterior exhaust. Main floor dryer vent cleaning is included in The Deep Clean package.',
     whatIsIncluded: [
       'Full vent line cleaning from dryer to exterior exhaust',
       'Lint trap and housing cleaning',
@@ -121,7 +121,7 @@ export const SERVICE_CONTENT = {
       'Visual inspection for damage or disconnections',
     ],
     process: [
-      { step: 'Inspection', description: 'We inspect the dryer vent run, identify the exhaust location (ground level, 2nd floor, or rooftop), and check for any visible damage or disconnections.' },
+      { step: 'Inspection', description: 'We inspect the dryer vent run, identify the exhaust location (main floor, 2nd floor, or rooftop), and check for any visible damage or disconnections.' },
       { step: 'Cleaning', description: 'We use rotary brushes and compressed air to clean the entire vent run from the dryer connection to the exterior exhaust, removing all lint and debris buildup.' },
       { step: 'Verification', description: 'We verify proper airflow through the cleaned vent and ensure the exterior cap opens and closes correctly.' },
     ],
@@ -130,7 +130,7 @@ export const SERVICE_CONTENT = {
     faqs: [
       {
         question: 'How much does dryer vent cleaning cost?',
-        answer: 'Dryer vent cleaning starts at $59.95 for ground-floor vents. Second-floor vents are $129.95 and rooftop vents are $199.95 due to additional access requirements. Save by bundling with our Full Service package ($349.95) which includes dryer vent cleaning.',
+        answer: 'Dryer vent cleaning starts at $69.95 for main floor vents. Second-floor vents are $149.95 and rooftop vents are $199.99 due to additional access requirements. Main floor dryer vent cleaning is included in The Deep Clean package ($299).',
       },
       {
         question: 'How often should I clean my dryer vent?',
@@ -148,48 +148,47 @@ export const SERVICE_CONTENT = {
   },
 
   'full-system-cleaning': {
-    title: 'Full HVAC System Cleaning in Calgary',
-    metaTitle: 'Full HVAC Cleaning Calgary | $349.95 | Everything Included',
+    title: 'The Deep Clean -- Full HVAC System Cleaning in Calgary',
+    metaTitle: 'Deep Clean HVAC Calgary | $299 | Everything Included',
     metaDescription:
-      'Complete HVAC system cleaning in Calgary for $349.95. Includes furnace, all ducts, dryer vent, HRV, fresh air intake, and 2-year care plan. Video-verified by The Vent Men.',
+      'Complete HVAC system cleaning in Calgary for $299. Includes furnace, all ducts, dryer vent, HRV, Benefect sanitization, and octopus whip treatment. Video-verified by The Vent Men.',
     answerBlock:
-      'Our Full Service HVAC cleaning is $349.95 and includes everything: furnace cleaning, all duct cleaning with rotary brushes, dryer vent cleaning, HRV cleaning, fresh air intake cleaning, octopus whip treatment, and a 2-year care plan. Before-and-after video documentation included. This is the complete package for homeowners who want their entire system cleaned properly.',
+      'The Deep Clean from The Vent Men is $299 and includes everything: furnace cleaning, two-pass duct cleaning with forward skip and octopus whip, main floor dryer vent cleaning, HRV/ERV cleaning, and Benefect sanitization -- all included in the price. Before-and-after video documentation included. This is the complete package for homeowners who want their entire system cleaned properly.',
     whatIsIncluded: [
       'Complete furnace cleaning (blower motor, filter, heat exchanger)',
-      'All supply and return duct cleaning with rotary brushes (10 vents included)',
-      'Dryer vent cleaning (ground floor)',
-      'HRV (Heat Recovery Ventilator) cleaning',
-      'Fresh air intake cleaning',
-      'Octopus whip treatment for stubborn buildup',
+      'Two-pass duct cleaning -- air gun plus forward skip tool on every vent (10 vents included)',
+      'Octopus whip treatment in all trunk lines',
+      'Main floor dryer vent cleaning',
+      'HRV / ERV cleaning',
+      'Benefect duct sanitization',
       'Before-and-after video documentation',
-      '2-year care plan with priority scheduling',
     ],
     process: [
-      { step: 'Full System Assessment', description: 'We inspect your entire HVAC system -- furnace, ductwork, dryer vent, HRV, and fresh air intake. We document the baseline condition on video.' },
+      { step: 'Full System Assessment', description: 'We inspect your entire HVAC system -- furnace, ductwork, dryer vent, and HRV. We document the baseline condition on video.' },
       { step: 'Furnace Cleaning', description: 'Complete furnace cleaning including blower motor removal, filter replacement, and heat exchanger inspection.' },
-      { step: 'Duct Cleaning with Rotary Brushes', description: 'Every supply and return vent is cleaned using rotary brushes (not just compressed air) for the most thorough debris removal. The HyperVac H2 provides continuous negative pressure throughout.' },
-      { step: 'Supplementary Systems', description: 'We clean the dryer vent run, HRV unit, and fresh air intake -- components most basic packages skip entirely.' },
-      { step: 'Octopus Whip & Final Pass', description: 'The octopus whip attachment agitates stubborn buildup in main trunk lines that standard tools miss.' },
-      { step: 'Documentation & Care Plan', description: 'You receive complete before-and-after video documentation and enrollment in our 2-year care plan with priority scheduling for your next cleaning.' },
+      { step: 'Two-Pass Duct Cleaning', description: 'Every supply and return vent gets two passes -- first with compressed air, then with a forward skip tool for thorough debris removal. The HyperVac H2 provides continuous negative pressure throughout.' },
+      { step: 'Trunk Line Deep Clean', description: 'The octopus whip attachment agitates stubborn buildup in main trunk lines that standard tools miss.' },
+      { step: 'Supplementary Systems', description: 'We clean the main floor dryer vent run, HRV/ERV unit, and apply Benefect botanical sanitizer throughout the duct system.' },
+      { step: 'Documentation', description: 'You receive complete before-and-after video documentation showing the condition of your system before and after cleaning.' },
     ],
     equipment:
-      'The Full Service package uses every tool in our arsenal: the HyperVac H2 commercial HEPA vacuum, rotary brush system, octopus whip agitator, compressed air tools, and specialized HRV cleaning equipment. This is the most thorough cleaning available.',
+      'The Deep Clean uses every tool in our arsenal: the HyperVac H2 commercial HEPA vacuum, forward skip tool, octopus whip agitator, compressed air tools, and specialized HRV cleaning equipment. This is the most thorough cleaning available.',
     faqs: [
       {
-        question: 'What is included in the Full Service package?',
-        answer: 'Everything: furnace cleaning, all duct cleaning with rotary brushes (10 vents included), dryer vent cleaning, HRV cleaning, fresh air intake cleaning, octopus whip treatment, before-and-after video documentation, and a 2-year care plan. It is our most comprehensive package at $349.95.',
+        question: 'What is included in The Deep Clean?',
+        answer: 'Everything: furnace cleaning, two-pass duct cleaning on every vent (10 included), octopus whip in trunk lines, main floor dryer vent, HRV/ERV cleaning, Benefect sanitization, and before-and-after video documentation. All for $299 plus $13.95 per additional vent over 10.',
       },
       {
-        question: 'Is the Full Service package worth the extra cost?',
-        answer: 'If your home has an HRV, dryer vent, and has not been cleaned in 2+ years, the Full Service package saves money compared to booking each service individually. It also includes rotary brush cleaning and the 2-year care plan, which most basic packages do not.',
-      },
-      {
-        question: 'What is a 2-year care plan?',
-        answer: 'Our care plan gives you priority scheduling for your next cleaning within 2 years, a locked-in rate, and seasonal maintenance reminders. It is our way of making sure your system stays clean long-term.',
+        question: 'Is The Deep Clean worth the extra $100 over The Standard?',
+        answer: 'If your home has an HRV, dryer vent, or has not been cleaned in 2+ years, The Deep Clean saves money compared to booking each service individually. The HRV cleaning alone is $59.95, sanitization is $79.95, and dryer vent is $69.95 -- that is over $200 in add-ons bundled for $100 more.',
       },
       {
         question: 'What is octopus whip cleaning?',
         answer: 'The octopus whip is a specialized attachment with multiple flexible arms that spin inside main trunk lines, agitating and dislodging debris that standard tools cannot reach. It is especially effective for homes with heavy buildup or systems that have not been cleaned in years.',
+      },
+      {
+        question: 'What is Benefect sanitization?',
+        answer: 'Benefect is a botanical antimicrobial that kills 99.99% of bacteria, mold, and fungi on contact. It is made from thyme oil and is safe for homes with children and pets. We apply it throughout the duct system after cleaning.',
       },
     ],
   },
@@ -202,16 +201,16 @@ export const AREA_CONTENT = {
     title: 'Furnace & Duct Cleaning in Calgary',
     metaTitle: 'Duct Cleaning Calgary | Video-Verified | The Vent Men',
     metaDescription:
-      'Professional furnace and duct cleaning across all Calgary neighborhoods. Before-and-after video proof, flat-rate pricing from $159.95. The Vent Men.',
+      'Professional furnace and duct cleaning across all Calgary neighborhoods. Before-and-after video proof, flat-rate pricing from $199. The Vent Men.',
     answerBlock:
-      'The Vent Men provides professional furnace and duct cleaning across all Calgary neighborhoods -- NW, NE, SW, and SE. Every job includes before-and-after video documentation so you can see exactly what was in your system. Flat-rate pricing starts at $159.95 for 10 vents. No hidden fees, no bait-and-switch.',
+      'The Vent Men provides professional furnace and duct cleaning across all Calgary neighborhoods -- NW, NE, SW, and SE. Every job includes before-and-after video documentation so you can see exactly what was in your system. Flat-rate pricing starts at $199 for 10 vents. No hidden fees, no bait-and-switch.',
     localContext:
       'Calgary\'s dry climate and long heating season mean your furnace works hard from September through May. Dust, pet hair, and construction debris accumulate in ductwork faster than most homeowners realize. We serve every Calgary neighborhood and typically book within the same week.',
     neighborhoods: ['Tuscany', 'Cranston', 'Signal Hill', 'McKenzie Towne', 'Panorama Hills', 'Auburn Bay', 'Evanston', 'Seton', 'Legacy', 'Mahogany', 'Walden', 'Bridgeland'],
     faqs: [
       {
         question: 'How much does duct cleaning cost in Calgary?',
-        answer: 'Duct cleaning in Calgary from The Vent Men starts at $159.95 for 10 vents (Basic package). Our Pro package with rotary brush cleaning is $219.95, and our Full Service package including dryer vent and HRV is $349.95. All packages include before-and-after video documentation.',
+        answer: 'Duct cleaning in Calgary from The Vent Men starts at $199 for 10 vents (The Standard). The Deep Clean at $299 includes HRV cleaning, sanitization, and dryer vent. All packages include before-and-after video documentation.',
       },
       {
         question: 'What is the best duct cleaning company in Calgary?',
@@ -230,7 +229,7 @@ export const AREA_CONTENT = {
     metaDescription:
       'Professional furnace and duct cleaning in Okotoks. Before-and-after video documentation, flat-rate pricing. No travel fees. The Vent Men.',
     answerBlock:
-      'The Vent Men provides professional furnace and duct cleaning in Okotoks with no travel fees. Every job includes before-and-after video documentation. We are based in Calgary and serve Okotoks regularly -- just 30 minutes south on Highway 2. Flat-rate pricing from $159.95.',
+      'The Vent Men provides professional furnace and duct cleaning in Okotoks with no travel fees. Every job includes before-and-after video documentation. We are based in Calgary and serve Okotoks regularly -- just 30 minutes south on Highway 2. Flat-rate pricing from $199.',
     localContext:
       'Okotoks is one of Alberta\'s fastest-growing communities, with thousands of newer homes that benefit from regular HVAC maintenance. Whether you are in the established neighborhoods near downtown Okotoks or the newer developments along the edges, we provide the same professional service with no additional travel charges.',
     neighborhoods: ['D\'Arcy', 'Cimarron', 'Drake Landing', 'Sheep River', 'Crystal Shores', 'Westridge'],
@@ -241,7 +240,7 @@ export const AREA_CONTENT = {
       },
       {
         question: 'How much does duct cleaning cost in Okotoks?',
-        answer: 'Duct cleaning in Okotoks starts at $159.95 for 10 vents with before-and-after video documentation. Our Pro package with rotary brush cleaning is $219.95. Same pricing as Calgary, no travel surcharge.',
+        answer: 'Duct cleaning in Okotoks starts at $199 for 10 vents with before-and-after video documentation. The Deep Clean at $299 includes HRV cleaning, sanitization, and dryer vent. Same pricing as Calgary, no travel surcharge.',
       },
       {
         question: 'Who is the best duct cleaning company in Okotoks?',
@@ -256,7 +255,7 @@ export const AREA_CONTENT = {
     metaDescription:
       'Professional furnace and duct cleaning in Chestermere. Before-and-after video documentation, flat-rate pricing. No travel fees. The Vent Men.',
     answerBlock:
-      'The Vent Men provides professional furnace and duct cleaning in Chestermere with no travel fees. Just 20 minutes east of Calgary, we serve Chestermere regularly. Every job includes before-and-after video documentation and flat-rate pricing from $159.95.',
+      'The Vent Men provides professional furnace and duct cleaning in Chestermere with no travel fees. Just 20 minutes east of Calgary, we serve Chestermere regularly. Every job includes before-and-after video documentation and flat-rate pricing from $199.',
     localContext:
       'Chestermere\'s lakeside community has seen rapid residential growth. Many homes here are newer builds that can accumulate construction dust and drywall particles in the ductwork. Regular cleaning helps maintain air quality, especially for families with young children or allergy concerns.',
     neighborhoods: ['Kinniburgh', 'Westmere', 'Rainbow Falls', 'Lakepointe', 'The Cove', 'Dawson\'s Landing'],
@@ -267,7 +266,7 @@ export const AREA_CONTENT = {
       },
       {
         question: 'How much does duct cleaning cost in Chestermere?',
-        answer: 'Duct cleaning in Chestermere starts at $159.95 for 10 vents with before-and-after video documentation. No travel surcharges for Chestermere service.',
+        answer: 'Duct cleaning in Chestermere starts at $199 for 10 vents with before-and-after video documentation. No travel surcharges for Chestermere service.',
       },
     ],
   },
@@ -278,7 +277,7 @@ export const AREA_CONTENT = {
     metaDescription:
       'Professional furnace and duct cleaning in Cochrane, AB. Before-and-after video documentation, flat-rate pricing. No travel fees. The Vent Men.',
     answerBlock:
-      'The Vent Men provides professional furnace and duct cleaning in Cochrane with no travel fees. Located 30 minutes northwest of Calgary, Cochrane is part of our regular service area. Every job includes before-and-after video documentation. Flat-rate pricing from $159.95.',
+      'The Vent Men provides professional furnace and duct cleaning in Cochrane with no travel fees. Located 30 minutes northwest of Calgary, Cochrane is part of our regular service area. Every job includes before-and-after video documentation. Flat-rate pricing from $199.',
     localContext:
       'Cochrane\'s location at the edge of the foothills means colder winters and more furnace runtime than Calgary proper. The town has grown significantly in recent years with new subdivisions that benefit from post-construction duct cleaning. We serve all Cochrane neighborhoods on a regular basis.',
     neighborhoods: ['Fireside', 'Sunset Ridge', 'Heartland', 'Riversong', 'Jumping Pound Ridge', 'Heritage Hills'],
@@ -289,7 +288,7 @@ export const AREA_CONTENT = {
       },
       {
         question: 'How much does duct cleaning cost in Cochrane?',
-        answer: 'Duct cleaning in Cochrane starts at $159.95 for 10 vents with before-and-after video documentation. Same pricing as Calgary.',
+        answer: 'Duct cleaning in Cochrane starts at $199 for 10 vents with before-and-after video documentation. Same pricing as Calgary.',
       },
     ],
   },
@@ -300,7 +299,7 @@ export const AREA_CONTENT = {
     metaDescription:
       'Professional furnace and duct cleaning in High River, AB. Before-and-after video documentation, flat-rate pricing. The Vent Men.',
     answerBlock:
-      'The Vent Men provides professional furnace and duct cleaning in High River. Located 45 minutes south of Calgary on Highway 2, High River is part of our service area. Every job includes before-and-after video documentation and flat-rate pricing from $159.95.',
+      'The Vent Men provides professional furnace and duct cleaning in High River. Located 45 minutes south of Calgary on Highway 2, High River is part of our service area. Every job includes before-and-after video documentation and flat-rate pricing from $199.',
     localContext:
       'High River experienced significant flood damage in 2013, and many homes underwent major renovations afterward. If your home was renovated or rebuilt post-flood, a professional duct cleaning can remove residual construction materials and ensure your HVAC system is operating cleanly.',
     neighborhoods: [],
@@ -318,7 +317,7 @@ export const AREA_CONTENT = {
     metaDescription:
       'Professional furnace and duct cleaning in Black Diamond and Turner Valley, AB. Video documentation, flat-rate pricing. The Vent Men.',
     answerBlock:
-      'The Vent Men provides professional furnace and duct cleaning in Black Diamond and Turner Valley. About 50 minutes southwest of Calgary, these communities are part of our service area. Every job includes before-and-after video documentation. Flat-rate pricing from $159.95.',
+      'The Vent Men provides professional furnace and duct cleaning in Black Diamond and Turner Valley. About 50 minutes southwest of Calgary, these communities are part of our service area. Every job includes before-and-after video documentation. Flat-rate pricing from $199.',
     localContext:
       'Black Diamond and neighboring Turner Valley are smaller communities where finding professional HVAC services can be challenging. We bring the same commercial-grade equipment and video-verified process that we use in Calgary, with no compromise on quality.',
     neighborhoods: [],
@@ -336,7 +335,7 @@ export const AREA_CONTENT = {
     metaDescription:
       'Professional furnace and duct cleaning in Langdon, AB. Before-and-after video documentation, flat-rate pricing. No travel fees. The Vent Men.',
     answerBlock:
-      'The Vent Men provides professional furnace and duct cleaning in Langdon with no travel fees. Just 25 minutes east of Calgary, Langdon is part of our regular service area. Every job includes before-and-after video documentation. Flat-rate pricing from $159.95.',
+      'The Vent Men provides professional furnace and duct cleaning in Langdon with no travel fees. Just 25 minutes east of Calgary, Langdon is part of our regular service area. Every job includes before-and-after video documentation. Flat-rate pricing from $199.',
     localContext:
       'Langdon has seen steady growth with new residential developments east of Calgary. Many of these newer homes benefit from an initial professional duct cleaning to remove construction dust and debris that accumulates during the building process.',
     neighborhoods: ['Boulder Creek', 'Indus'],

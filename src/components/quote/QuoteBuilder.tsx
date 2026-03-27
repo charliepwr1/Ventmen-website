@@ -11,8 +11,13 @@ import type {
 } from "@/types";
 import { calculateQuotePrice, formatPrice } from "@/lib/utils/pricing";
 import { submitQuote, type QuoteSubmissionResult } from "@/app/quote/actions";
-import { ProgressBar } from "@/components/ui";
-import { Step1Home, Step2Package, Step3Addons, Step4Review } from "./steps";
+import { ProgressBar, TrustBadges } from "@/components/ui";
+import {
+  Step1Home,
+  Step2HomeFeatures,
+  Step3Package,
+  Step4Review,
+} from "./steps";
 
 interface QuoteBuilderProps {
   packages: PackagesConfig;
@@ -20,19 +25,27 @@ interface QuoteBuilderProps {
   timeframeOptions: TimeframeOption[];
 }
 
-const STEP_LABELS = ["Your Home", "Package", "Add-Ons", "Review"];
+const STEP_LABELS = ["Your Home", "Home Features", "Your Package", "Review"];
 
 const initialQuoteData: QuoteData = {
+  // Step 1
   houseType: "detached",
-  vents: 15,
+  vents: 25,
   furnaces: 1,
-  hasHighEfficiency: false,
+  // Step 2: home features
   hasAC: false,
   hasHRV: false,
-  package: "pro",
-  dryerVent: "none",
-  sanitizing: false,
-  humidifierService: false,
+  dryerVentLocation: "none",
+  hasHumidifier: false,
+  hasCentralVac: false,
+  // Step 3: package + add-ons
+  package: "deepclean",
+  wantsHRV: false,
+  wantsSanitizing: false,
+  wantsDryerVent: false,
+  wantsHumidifier: false,
+  wantsCentralVac: false,
+  // Step 4: contact
   timeframe: "",
   name: "",
   phone: "",
@@ -133,15 +146,22 @@ export default function QuoteBuilder({
               stepLabels={STEP_LABELS}
             />
           </div>
-          <div className="text-right shrink-0">
-            <span className="text-xs text-charcoal/60 uppercase tracking-wide">
-              Your estimate
-            </span>
-            <span className="block font-display text-2xl font-bold text-orange">
-              ${formattedPrice}
-            </span>
-          </div>
+          {step >= 3 && (
+            <div className="text-right shrink-0">
+              <span className="text-xs text-charcoal/60 uppercase tracking-wide">
+                Your estimate
+              </span>
+              <span className="block font-display text-2xl font-bold text-orange">
+                ${formattedPrice}
+              </span>
+            </div>
+          )}
         </div>
+      </div>
+
+      {/* Trust Badges */}
+      <div className="py-4 px-6 bg-white border-b border-cream-dark">
+        <TrustBadges className="max-w-5xl mx-auto" />
       </div>
 
       {/* Step Content */}
@@ -151,20 +171,19 @@ export default function QuoteBuilder({
         )}
 
         {step === 2 && (
-          <Step2Package
+          <Step2HomeFeatures
             data={data}
             updateData={updateData}
-            packages={packages}
-            addons={addons}
             onNext={nextStep}
             onBack={prevStep}
           />
         )}
 
         {step === 3 && (
-          <Step3Addons
+          <Step3Package
             data={data}
             updateData={updateData}
+            packages={packages}
             addons={addons}
             onNext={nextStep}
             onBack={prevStep}
