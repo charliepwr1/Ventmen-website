@@ -20,7 +20,6 @@ export default function Step4Quote({
   onBack,
 }: Step4QuoteProps) {
   // Card display prices: computed with FIXED data so they never shift
-  // when toggling packages or optional extras
   const noAddons: Partial<QuoteData> = {
     wantsHRV: false,
     wantsSanitizing: false,
@@ -29,15 +28,11 @@ export default function Step4Quote({
     wantsCentralVac: false,
   };
 
-  // Standard card: base price only (package + extra vents + AC + furnaces)
   const standardCardPrice = calculatePriceForPackage(
     { ...data, ...noAddons },
     "standard"
   );
 
-  // Deep Clean card: base price + its included freebies (HRV, sanitizing, dryer ground)
-  // The pricing engine handles inclusions internally -- HRV/sanitizing/ground dryer
-  // are free for deepclean, but 2nd floor/rooftop dryer pays the upgrade difference
   const deepCleanCardPrice = calculatePriceForPackage(
     {
       ...data,
@@ -71,8 +66,7 @@ export default function Step4Quote({
 
   const isDeepClean = data.package === "deepclean";
 
-  // Build list of extras included in Deep Clean (shown on Deep Clean card as value items,
-  // shown on Standard card as "not included")
+  // Build list of extras included in Deep Clean
   const includedExtras: { label: string; value: number }[] = [];
   if (data.hasHRV) {
     includedExtras.push({ label: "HRV/ERV cleaning", value: ADDONS.hrv.price });
@@ -101,7 +95,7 @@ export default function Step4Quote({
   const showCentralVac = data.hasCentralVac;
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full max-w-lg mx-auto">
       <h1 className="font-display text-2xl font-bold text-navy text-center mb-2">
         Here&apos;s what we recommend
       </h1>
@@ -110,145 +104,127 @@ export default function Step4Quote({
         {data.vents} vents
       </p>
 
-      {/* Package Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 max-w-3xl mx-auto">
-        {/* Deep Clean Card (shown first) */}
+      {/* Package Toggle Bar -- both prices always visible */}
+      <div className="flex rounded-lg border-2 border-cream-dark overflow-hidden mb-6">
         <button
           type="button"
           onClick={() => handlePackageSelect("deepclean")}
-          className={`text-left border-2 rounded-lg overflow-hidden relative transition-all ${
+          className={`flex-1 py-3 px-2 text-center transition-colors relative ${
             isDeepClean
-              ? "border-orange shadow-lg scale-[1.02]"
-              : "border-gray-200 hover:border-orange/50"
+              ? "bg-navy text-white"
+              : "bg-white text-navy hover:bg-gray-50"
           }`}
         >
-          {/* Best Value Badge */}
-          <div className="absolute -top-0 left-1/2 -translate-x-1/2 bg-orange text-white text-[10px] font-bold uppercase px-3 py-1 rounded-b-md z-10">
-            Best Value
-          </div>
-
-          {/* Header */}
-          <div className="bg-navy text-white p-4 text-center pt-7">
-            <div className="text-[10px] uppercase tracking-wider opacity-60">
-              Recommended
-            </div>
-            <h3 className="font-display text-lg font-bold uppercase">
-              {PACKAGES.deepclean.name}
-            </h3>
-            <div className="text-3xl font-extrabold text-orange mt-1">
-              ${formatPrice(deepCleanCardPrice)}
-            </div>
-            <div className="text-xs opacity-50">+ GST</div>
-          </div>
-
-          {/* Features */}
-          <div className="p-4 bg-white">
-            <div className="text-xs text-charcoal/50 mb-2">
-              Everything in Standard, plus:
-            </div>
-            <div className="space-y-1.5 text-sm">
-              <div className="flex items-start gap-2">
-                <span className="text-orange font-bold mt-0.5 shrink-0">&#10003;</span>
-                <span className="text-navy">Double-pass cleaning with octopus whip</span>
-              </div>
-              {includedExtras.map((extra) => (
-                <div key={extra.label} className="flex items-start gap-2">
-                  <span className="text-orange font-bold mt-0.5 shrink-0">&#10003;</span>
-                  <span className="text-navy">
-                    {extra.label}{" "}
-                    <span className="text-orange font-semibold">
-                      (${formatPrice(extra.value)} value)
-                    </span>
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* Value callout */}
-            {decoy.includedExtrasValue > 0 && (
-              <div className="mt-3 p-2 bg-orange/5 rounded-md text-center text-xs text-navy">
-                <span className="font-bold text-orange">
-                  ${formatPrice(decoy.includedExtrasValue)} in extras included
-                </span>{" "}
-                at no additional cost
-              </div>
-            )}
-          </div>
-
-          {/* Selected indicator */}
           {isDeepClean && (
-            <div className="bg-orange text-white text-center py-1.5 text-xs font-bold uppercase">
-              Selected
-            </div>
+            <span className="absolute -top-0 left-1/2 -translate-x-1/2 bg-orange text-white text-[8px] font-bold uppercase px-2 py-0.5 rounded-b-sm">
+              Best Value
+            </span>
           )}
+          <span className="block text-xs font-semibold uppercase tracking-wide opacity-70 mt-1">
+            {PACKAGES.deepclean.name}
+          </span>
+          <span className={`block text-xl font-extrabold ${isDeepClean ? "text-orange" : ""}`}>
+            ${formatPrice(deepCleanCardPrice)}
+          </span>
         </button>
-
-        {/* Standard Card */}
+        <div className="w-px bg-cream-dark" />
         <button
           type="button"
           onClick={() => handlePackageSelect("standard")}
-          className={`text-left border-2 rounded-lg overflow-hidden transition-all ${
+          className={`flex-1 py-3 px-2 text-center transition-colors ${
             !isDeepClean
-              ? "border-orange shadow-lg scale-[1.02]"
-              : "border-gray-200 hover:border-orange/50"
+              ? "bg-navy text-white"
+              : "bg-white text-navy hover:bg-gray-50"
           }`}
         >
-          {/* Header */}
-          <div className="bg-gray-100 p-4 text-center">
-            <h3 className="font-display text-lg font-bold uppercase text-navy">
-              {PACKAGES.standard.name}
-            </h3>
-            <div className="text-3xl font-extrabold text-navy mt-1">
-              ${formatPrice(standardCardPrice)}
-            </div>
-            <div className="text-xs text-charcoal/50">+ GST</div>
-          </div>
-
-          {/* Features */}
-          <div className="p-4 bg-white">
-            <div className="space-y-1.5 text-sm">
-              <div className="flex items-start gap-2">
-                <span className="text-charcoal/30 mt-0.5 shrink-0">&#10003;</span>
-                <span className="text-charcoal/70">Air gun on every supply vent</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="text-charcoal/30 mt-0.5 shrink-0">&#10003;</span>
-                <span className="text-charcoal/70">Back skipper in trunk lines</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="text-charcoal/30 mt-0.5 shrink-0">&#10003;</span>
-                <span className="text-charcoal/70">Furnace blower cleaning</span>
-              </div>
-            </div>
-
-            {/* Not included -- show what extras would cost to add */}
-            <div className="mt-3 p-2 bg-gray-50 rounded-md text-xs text-charcoal/50">
-              <div className="font-semibold text-charcoal/60 mb-1">Not included:</div>
-              {includedExtras.map((extra) => (
-                <div key={extra.label} className="flex justify-between">
-                  <span>{extra.label}</span>
-                  <span className="text-charcoal/60">+${formatPrice(extra.value)}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Selected indicator */}
-          {!isDeepClean && (
-            <div className="bg-orange text-white text-center py-1.5 text-xs font-bold uppercase">
-              Selected
-            </div>
-          )}
+          <span className="block text-xs font-semibold uppercase tracking-wide opacity-70">
+            {PACKAGES.standard.name}
+          </span>
+          <span className={`block text-xl font-extrabold ${!isDeepClean ? "text-orange" : ""}`}>
+            ${formatPrice(standardCardPrice)}
+          </span>
         </button>
       </div>
 
-      {/* Optional Extras -- sanitizing always shown, others conditional */}
-      <div className="max-w-3xl mx-auto mb-6">
+      {/* Detail Panel -- updates based on selection */}
+      <div className="border-2 border-cream-dark rounded-lg overflow-hidden mb-6">
+        {isDeepClean ? (
+          <>
+            {/* Deep Clean details */}
+            <div className="p-4">
+              <div className="text-xs text-charcoal/50 mb-3">
+                Everything in Standard, plus:
+              </div>
+              <div className="space-y-2 text-sm">
+                <div className="flex items-start gap-2">
+                  <span className="text-orange font-bold mt-0.5 shrink-0">&#10003;</span>
+                  <span className="text-navy">Double-pass cleaning with octopus whip</span>
+                </div>
+                {includedExtras.map((extra) => (
+                  <div key={extra.label} className="flex items-start gap-2">
+                    <span className="text-orange font-bold mt-0.5 shrink-0">&#10003;</span>
+                    <span className="text-navy">
+                      {extra.label}{" "}
+                      <span className="text-orange font-semibold">
+                        (${formatPrice(extra.value)} value)
+                      </span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Value callout */}
+              {decoy.includedExtrasValue > 0 && (
+                <div className="mt-4 p-2.5 bg-orange/5 rounded-md text-center text-sm text-navy">
+                  <span className="font-bold text-orange">
+                    ${formatPrice(decoy.includedExtrasValue)} in extras included
+                  </span>{" "}
+                  at no additional cost
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Standard details */}
+            <div className="p-4">
+              <div className="space-y-2 text-sm">
+                <div className="flex items-start gap-2">
+                  <span className="text-charcoal/40 mt-0.5 shrink-0">&#10003;</span>
+                  <span className="text-charcoal/70">Air gun on every supply vent</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-charcoal/40 mt-0.5 shrink-0">&#10003;</span>
+                  <span className="text-charcoal/70">Back skipper in trunk lines</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-charcoal/40 mt-0.5 shrink-0">&#10003;</span>
+                  <span className="text-charcoal/70">Furnace blower cleaning</span>
+                </div>
+              </div>
+
+              {/* Not included */}
+              <div className="mt-4 p-2.5 bg-gray-50 rounded-md text-sm">
+                <div className="font-semibold text-charcoal/60 text-xs mb-1.5">Not included:</div>
+                {includedExtras.map((extra) => (
+                  <div key={extra.label} className="flex justify-between text-charcoal/50 text-xs py-0.5">
+                    <span>{extra.label}</span>
+                    <span className="text-charcoal/60 font-medium">+${formatPrice(extra.value)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Optional Extras */}
+      <div className="mb-6">
         <h3 className="font-display text-xs uppercase tracking-wide text-charcoal/60 mb-3">
           Optional extras
         </h3>
         <div className="space-y-2">
-          {/* Sanitizing -- toggleable for Standard, shows "Included" for Deep Clean */}
+          {/* Sanitizing */}
           <div
             className={`flex items-center justify-between p-3 border-2 rounded-lg transition-colors ${
               isDeepClean
@@ -327,7 +303,7 @@ export default function Step4Quote({
       </div>
 
       {/* Trust Signals */}
-      <div className="max-w-3xl mx-auto p-4 bg-green-50/50 rounded-lg mb-8">
+      <div className="p-4 bg-green-50/50 rounded-lg mb-8">
         <div className="flex flex-col gap-2 text-sm">
           <div className="flex items-center gap-2">
             <span className="text-orange">&#10003;</span>
@@ -349,7 +325,7 @@ export default function Step4Quote({
       </div>
 
       {/* Navigation */}
-      <div className="max-w-lg mx-auto flex gap-4 items-center">
+      <div className="flex gap-4 items-center">
         <button
           type="button"
           onClick={onBack}
