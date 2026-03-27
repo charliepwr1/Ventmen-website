@@ -35,7 +35,7 @@ export const quoteDataSchema = z.object({
   wantsHumidifier: z.boolean(),
   wantsCentralVac: z.boolean(),
   // Step 4
-  timeframe: z.enum(["asap", "this-week", "next-week", "flexible", ""]),
+  timeframe: z.enum(["this-week", "within-2-weeks", "exploring", ""]),
   name: z.string(),
   phone: z.string(),
   email: z.string(),
@@ -47,7 +47,7 @@ export const quoteSubmissionSchema = quoteDataSchema.extend({
   email: z.string().email("Please enter a valid email"),
   phone: z.string().min(1, "Phone number is required"),
   address: z.string().min(5, "Please enter a valid address"),
-  timeframe: z.enum(["asap", "this-week", "next-week", "flexible"]),
+  timeframe: z.enum(["this-week", "within-2-weeks", "exploring"]),
 });
 
 export type QuoteContactFormData = z.infer<typeof quoteContactSchema>;

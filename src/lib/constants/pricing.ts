@@ -49,10 +49,9 @@ export const ADDONS: AddonsConfig = {
 };
 
 export const TIMEFRAME_OPTIONS: TimeframeOption[] = [
-  { value: "asap", label: "As soon as possible", desc: "Within 1-2 days" },
-  { value: "this-week", label: "This week", desc: "Within 3-7 days" },
-  { value: "next-week", label: "Next week or two", desc: "1-2 weeks out" },
-  { value: "flexible", label: "I'm flexible", desc: "Whenever works" },
+  { value: "this-week", label: "This week", desc: "Subject to availability" },
+  { value: "within-2-weeks", label: "Within 2 weeks", desc: "Flexible scheduling" },
+  { value: "exploring", label: "Just exploring", desc: "Get a quote for later" },
 ];
 
 export interface HouseTypeConfig {
