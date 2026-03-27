@@ -1,6 +1,6 @@
 import type { QuoteData } from "@/types";
 import { INCLUDED_VENTS } from "@/lib/constants";
-import { Stepper, ToggleSwitch } from "@/components/ui";
+import { Stepper } from "@/components/ui";
 
 interface Step2HomeDetailsProps {
   data: QuoteData;
@@ -89,16 +89,6 @@ export default function Step2HomeDetails({
             </button>
           ))}
         </div>
-      </div>
-
-      {/* AC Toggle */}
-      <div className="mb-8">
-        <ToggleSwitch
-          label="Central A/C"
-          description="Air conditioning system"
-          enabled={data.hasAC}
-          onToggle={() => updateData({ hasAC: !data.hasAC })}
-        />
       </div>
 
       {/* Navigation */}

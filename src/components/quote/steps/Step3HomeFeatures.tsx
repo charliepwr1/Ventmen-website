@@ -53,6 +53,14 @@ export default function Step3HomeFeatures({
       </p>
 
       <div className="flex flex-col gap-3">
+        {/* AC */}
+        <ToggleSwitch
+          label="Central A/C"
+          description="Air conditioning system"
+          enabled={data.hasAC}
+          onToggle={() => updateData({ hasAC: !data.hasAC })}
+        />
+
         {/* HRV */}
         <ToggleSwitch
           label="HRV / ERV"
