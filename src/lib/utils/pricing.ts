@@ -27,7 +27,7 @@ export function calculateBothPackagePrices(data: QuoteData): {
  * Core pricing engine. Calculates total for a given package type
  * using the user's home info and add-on selections.
  */
-function calculatePriceForPackage(
+export function calculatePriceForPackage(
   data: QuoteData,
   pkg: PackageType
 ): number {
@@ -91,6 +91,64 @@ function calculatePriceForPackage(
   }
 
   return total;
+}
+
+/**
+ * Calculate the decoy comparison: what Standard would cost if the customer
+ * added all the extras that Deep Clean includes for free.
+ * Used by Step 4 to render the value callout and strikethrough comparison.
+ */
+export function calculateDecoySavings(data: QuoteData): {
+  standardWithAddons: number;
+  deepClean: number;
+  savings: number;
+  includedExtrasValue: number;
+  decoyLabel: string;
+} {
+  // Deep Clean total as-is (pricing engine handles inclusions)
+  const deepClean = calculatePriceForPackage(data, "deepclean");
+
+  // Base Standard price: vents + AC + furnaces only, no add-ons
+  const baseStandard = calculatePriceForPackage(
+    { ...data, wantsHRV: false, wantsSanitizing: false, wantsDryerVent: false, wantsHumidifier: false, wantsCentralVac: false },
+    "standard"
+  );
+
+  // Calculate what Deep Clean-included extras would cost a la carte on Standard
+  let includedExtrasValue = 0;
+  const decoyParts: string[] = [];
+
+  if (data.hasHRV) {
+    includedExtrasValue += ADDONS.hrv.price;
+    decoyParts.push("HRV");
+  }
+
+  // Sanitizing always counts -- everyone benefits
+  includedExtrasValue += ADDONS.sanitizing.price;
+  decoyParts.push("sanitizing");
+
+  if (data.dryerVentLocation !== "none") {
+    const dryerPrice =
+      data.dryerVentLocation === "ground"
+        ? ADDONS.dryerGround.price
+        : data.dryerVentLocation === "second-floor"
+          ? ADDONS.dryerSecondFloor.price
+          : ADDONS.dryerRooftop.price;
+    includedExtrasValue += dryerPrice;
+    decoyParts.push("dryer vent");
+  }
+
+  // No shared add-ons (humidifier/centralVac) -- they're the same price
+  // for both packages and cancel out in the savings math
+  const standardWithAddons = baseStandard + includedExtrasValue;
+
+  return {
+    standardWithAddons,
+    deepClean,
+    savings: standardWithAddons - deepClean,
+    includedExtrasValue,
+    decoyLabel: decoyParts.join(" + "),
+  };
 }
 
 export function formatPrice(price: number): string {
