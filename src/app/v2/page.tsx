@@ -6,6 +6,9 @@ import { CredentialBar } from "@/components/v2/CredentialBar";
 import { DifferentiatorCards } from "@/components/v2/DifferentiatorCards";
 import { BeforeAfterSlider } from "@/components/v2/BeforeAfterSlider";
 import { QuoteCTA } from "@/components/v2/QuoteCTA";
+import { SocialProof } from "@/components/v2/SocialProof";
+import { AboutMini } from "@/components/v2/AboutMini";
+import { RetroFooter } from "@/components/v2/RetroFooter";
 
 export const metadata: Metadata = {
   title: "Home V2 | The Vent Men",
@@ -23,6 +26,9 @@ export default function V2HomePage() {
       <DifferentiatorCards />
       <BeforeAfterSlider />
       <QuoteCTA />
+      <SocialProof />
+      <AboutMini />
+      <RetroFooter />
     </div>
   );
 }
