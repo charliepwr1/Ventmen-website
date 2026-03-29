@@ -68,7 +68,9 @@ Every page follows this structure:
 ## Existing Pages (DO NOT rebuild)
 | Route | Description | Key Feature |
 |-------|-------------|-------------|
-| `/` | Homepage | Hero, trust bar, how-it-works, pricing, reviews placeholder, WebPage schema |
+| `/` | Homepage (v2) | Scroll-reveal hero ("dirty water/dirty air"), credential bar, differentiators, before/after slider, social proof, retro footer |
+| `/v1` | Old Homepage (backup) | Previous hero design with video placeholder, noindex |
+| `/v2` | Redirect | Redirects to `/` |
 | `/services` | Services & Pricing | Package comparison, add-ons, links to individual service pages |
 | `/services/furnace-cleaning` | Furnace Cleaning | Answer-first content, Service + FAQPage schema |
 | `/services/duct-cleaning` | Duct Cleaning | Answer-first content, Service + FAQPage schema |
@@ -77,38 +79,54 @@ Every page follows this structure:
 | `/about` | About Us | Team bios, values, indigenous ownership, Person schema, credentials section |
 | `/faq` | FAQ | 19 questions (5 AI-targeted), FAQPage JSON-LD schema |
 | `/service-area` | Service Areas | 7 communities listed, links to individual area pages |
-| `/service-area/calgary` | Calgary | Local context, neighborhoods, HVACBusiness schema |
-| `/service-area/okotoks` | Okotoks | Local context, HVACBusiness schema |
-| `/service-area/chestermere` | Chestermere | Local context, HVACBusiness schema |
-| `/service-area/cochrane` | Cochrane | Local context, HVACBusiness schema |
-| `/service-area/high-river` | High River | Local context, HVACBusiness schema |
-| `/service-area/black-diamond` | Black Diamond | Local context, HVACBusiness schema |
-| `/service-area/langdon` | Langdon | Local context, HVACBusiness schema |
+| `/service-area/[city]` | Area Pages | Calgary, Okotoks, Chestermere, Cochrane, High River, Black Diamond, Langdon |
 | `/contact` | Contact | Form + contact info |
 | `/work` | Gallery | Before/after placeholder |
-| `/quote` | Quote Builder | 4-step wizard with server-side pricing |
+| `/quote` | Quote Builder | 5-step wizard with decoy pricing psychology |
+
+## Quote Builder (5 Steps)
+The quote builder at `/quote` is a 5-step wizard with decoy pricing (Deep Clean pre-selected, includes extras that Standard charges for):
+
+1. **Step 1 - Home Type:** House type cards (detached/townhome/condo) with auto-advance
+2. **Step 2 - Details:** Vent count stepper, furnace count (1-3)
+3. **Step 3 - Features:** Toggle switches for AC, HRV, dryer vent location, humidifier, central vac. Pre-seeds `wants*` flags.
+4. **Step 4 - Your Quote:** Toggle bar (Deep Clean/Standard with live prices), feature highlights, all add-ons with included/toggleable states, expandable price breakdown, trust signals
+5. **Step 5 - Book:** Timeframe selection, contact form, sticky quote summary, submit via server action
+
+Key pricing logic in `src/lib/utils/pricing.ts`:
+- `calculatePriceForPackage(data, pkg)` — core engine, respects `wants*` flags and package-specific inclusions
+- `calculateDecoySavings(data)` — computes value of Deep Clean inclusions vs Standard a la carte
+- Deep Clean includes: sanitizing, HRV cleaning, main-floor dryer vent at no extra cost
+- Selected package shows live price (updates with add-on toggles), unselected shows base price
 
 ## Pricing (from src/lib/constants/pricing.ts)
-- Basic: $159.95 base, $9.95/extra vent (10 included)
-- Pro: $219.95 base, $13.95/extra vent (10 included) — RECOMMENDED
-- Full Service: $349.95 base, $14.95/extra vent (10 included)
-- See `ADDONS` constant for add-on pricing
+- **The Standard:** $199 base, $11.95/extra vent (10 included)
+- **The Deep Clean:** $299 base, $13.95/extra vent (10 included) — RECOMMENDED, pre-selected
+- **Add-ons:** AC surcharge $29.95, additional furnace $99.95, dryer vent $69.95-$199.99 (by location), sanitizing $79.95, HRV $59.95, humidifier $34.95, central vac $65.00
 
 ## Component Library (src/components/)
 - **Layout:** Header (mobile menu), Footer
-- **UI:** ProgressBar, Stepper, ToggleCard, VisualSelector, ExpandableSection, TrustBadges
-- **Quote:** QuoteBuilder, QuoteSummary, Step1Home, Step2Package, Step3Addons, Step4Review
+- **UI:** ProgressBar, Stepper, ToggleSwitch, ToggleCard, VisualSelector, ExpandableSection, TrustBadges
+- **Quote:** QuoteBuilder (orchestrator), QuoteSummary, Step1Home, Step2HomeDetails, Step3HomeFeatures, Step4Quote, Step5Book
+- **V2 Homepage:** HeroSetup, HeroPunchline, CredentialBar, DifferentiatorCards, BeforeAfterSlider, QuoteCTA, SocialProof, AboutMini, RetroFooter, StickyMobileCTA
 - **SEO:** JsonLd (server component for Schema.org JSON-LD injection)
 - **Services:** ServicePage (shared component for all 4 service pages)
 - **Service Area:** AreaPage (shared component for all 7 area pages)
+- **Hooks:** `useScrollReveal` (IntersectionObserver-based scroll reveal with reduced-motion support)
 
-## AI Optimization (feature/ai-optimization branch)
+## AI Optimization (merged to master)
 - **Schema.org JSON-LD:** HVACBusiness in root layout, Service + FAQPage on service pages, HVACBusiness on area pages, Person on about, WebPage on homepage
 - **AI crawler access:** robots.txt allows GPTBot, ClaudeBot, PerplexityBot, Google-Extended, ChatGPT-User, cohere-ai
 - **llms.txt:** AI-readable site guide at `public/llms.txt`
 - **Answer-first content:** First 40-60 words on every service/area page directly answer likely AI queries
 - **Constants:** `schema.ts` (business data source of truth), `content.ts` (service + area page content)
 - **Change map:** `docs/change-map.md` tracks where every business data point is hardcoded vs centralized
+
+## Tests (tests/*.spec.ts)
+- `smoke.spec.ts` — basic page load tests for all routes
+- `quote-builder.spec.ts` — 5-step navigation, pricing display, form interaction
+- `v2-homepage.spec.ts` — hero sections, scroll reveal, credentials, slider, CTAs
+- **Note:** Playwright is a devDependency. `playwright.config.ts` and `tests/` are excluded from tsconfig to avoid Vercel build failures.
 
 ## What's Missing (Agent Task Targets)
 - Blog/content system
